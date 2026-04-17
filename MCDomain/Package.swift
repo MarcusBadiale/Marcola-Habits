@@ -18,5 +18,9 @@ let package = Package(
                 .product(name: "MCShared", package: "MCShared"),
             ]
         ),
+        .testTarget(
+            name: "MCDomainTests",
+            dependencies: ["MCDomain"]
+        ),
     ]
 )
