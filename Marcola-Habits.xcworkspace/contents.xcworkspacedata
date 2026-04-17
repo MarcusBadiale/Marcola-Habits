@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:MCFeatures">
+   </FileRef>
+   <FileRef
+      location = "group:MCInfrastructure">
+   </FileRef>
+   <FileRef
+      location = "group:MCCore">
+   </FileRef>
+   <FileRef
+      location = "group:MCDomain">
+   </FileRef>
+   <FileRef
+      location = "group:MCShared">
+   </FileRef>
+   <FileRef
+      location = "container:Marcola-Habits.xcodeproj">
+   </FileRef>
+</Workspace>
