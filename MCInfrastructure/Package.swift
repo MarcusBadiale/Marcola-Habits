@@ -6,7 +6,10 @@ let package = Package(
     name: "MCInfrastructure",
     platforms: [.iOS(.v18), .macOS(.v15)],
     products: [
-        .library(name: "MCInfrastructure", targets: ["MCInfrastructure"]),
+        .library(name: "MCPersistence", targets: ["MCPersistence"]),
+        .library(name: "MCSyncAPI", targets: ["MCSyncAPI"]),
+        .library(name: "MCSync", targets: ["MCSync"]),
+        .library(name: "MCNetworking", targets: ["MCNetworking"]),
     ],
     dependencies: [
         .package(path: "../MCDomain"),
@@ -14,11 +17,17 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "MCInfrastructure",
+            name: "MCPersistence",
             dependencies: [
                 .product(name: "MCDomain", package: "MCDomain"),
                 .product(name: "MCShared", package: "MCShared"),
             ]
         ),
+        .target(name: "MCSyncAPI"),
+        .target(
+            name: "MCSync",
+            dependencies: ["MCSyncAPI"]
+        ),
+        .target(name: "MCNetworking"),
     ]
 )
