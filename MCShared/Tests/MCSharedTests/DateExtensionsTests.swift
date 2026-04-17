@@ -2,10 +2,6 @@ import Testing
 import Foundation
 @testable import MCShared
 
-extension Tag {
-    @Tag static var extensions: Self
-}
-
 @Suite("Date Extensions")
 struct DateExtensionsTests {
 
