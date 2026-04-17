@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		ABC1EC0B2F91EA5A000CE928 /* MCShared in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCA12F91F0000042B59E /* MCShared */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		AB0BBC842F91DBA80042B59E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,9 +28,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		AB0BBC762F91DBA60042B59E /* Marcola-Habits.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Marcola-Habits.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AB0BBC832F91DBA80042B59E /* Marcola-HabitsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Marcola-HabitsTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AB0BBC8D2F91DBA80042B59E /* Marcola-HabitsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Marcola-HabitsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABD108932F91E5C4006415FF /* Marcola-Habits.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Marcola-Habits.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABD108942F91E5C4006415FF /* Marcola-HabitsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Marcola-HabitsTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABD108952F91E5C4006415FF /* Marcola-HabitsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Marcola-HabitsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABC1EC0B2F91EA5A000CE928 /* MCShared in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,18 +83,10 @@
 				AB0BBC782F91DBA60042B59E /* Marcola-Habits */,
 				AB0BBC862F91DBA80042B59E /* Marcola-HabitsTests */,
 				AB0BBC902F91DBA80042B59E /* Marcola-HabitsUITests */,
-				AB0BBC772F91DBA60042B59E /* Products */,
+				ABD108932F91E5C4006415FF /* Marcola-Habits.app */,
+				ABD108942F91E5C4006415FF /* Marcola-HabitsTests.xctest */,
+				ABD108952F91E5C4006415FF /* Marcola-HabitsUITests.xctest */,
 			);
-			sourceTree = "<group>";
-		};
-		AB0BBC772F91DBA60042B59E /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				AB0BBC762F91DBA60042B59E /* Marcola-Habits.app */,
-				AB0BBC832F91DBA80042B59E /* Marcola-HabitsTests.xctest */,
-				AB0BBC8D2F91DBA80042B59E /* Marcola-HabitsUITests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -112,9 +109,14 @@
 			);
 			name = "Marcola-Habits";
 			packageProductDependencies = (
+				AB0BBCA12F91F0000042B59E /* MCShared */,
+				AB0BBCA32F91F0000042B59E /* MCDomain */,
+				AB0BBCA52F91F0000042B59E /* MCCore */,
+				AB0BBCA72F91F0000042B59E /* MCInfrastructure */,
+				AB0BBCA92F91F0000042B59E /* MCFeatures */,
 			);
 			productName = "Marcola-Habits";
-			productReference = AB0BBC762F91DBA60042B59E /* Marcola-Habits.app */;
+			productReference = ABD108932F91E5C4006415FF /* Marcola-Habits.app */;
 			productType = "com.apple.product-type.application";
 		};
 		AB0BBC822F91DBA80042B59E /* Marcola-HabitsTests */ = {
@@ -137,7 +139,7 @@
 			packageProductDependencies = (
 			);
 			productName = "Marcola-HabitsTests";
-			productReference = AB0BBC832F91DBA80042B59E /* Marcola-HabitsTests.xctest */;
+			productReference = ABD108942F91E5C4006415FF /* Marcola-HabitsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		AB0BBC8C2F91DBA80042B59E /* Marcola-HabitsUITests */ = {
@@ -160,7 +162,7 @@
 			packageProductDependencies = (
 			);
 			productName = "Marcola-HabitsUITests";
-			productReference = AB0BBC8D2F91DBA80042B59E /* Marcola-HabitsUITests.xctest */;
+			productReference = ABD108952F91E5C4006415FF /* Marcola-HabitsUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -195,8 +197,15 @@
 			);
 			mainGroup = AB0BBC6D2F91DBA60042B59E;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				AB0BBCA02F91F0000042B59E /* XCLocalSwiftPackageReference "MCShared" */,
+				AB0BBCA22F91F0000042B59E /* XCLocalSwiftPackageReference "MCDomain" */,
+				AB0BBCA42F91F0000042B59E /* XCLocalSwiftPackageReference "MCCore" */,
+				AB0BBCA62F91F0000042B59E /* XCLocalSwiftPackageReference "MCInfrastructure" */,
+				AB0BBCA82F91F0000042B59E /* XCLocalSwiftPackageReference "MCFeatures" */,
+			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = AB0BBC772F91DBA60042B59E /* Products */;
+			productRefGroup = AB0BBC6D2F91DBA60042B59E;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -615,6 +624,52 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		AB0BBCA02F91F0000042B59E /* XCLocalSwiftPackageReference "MCShared" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = MCShared;
+		};
+		AB0BBCA22F91F0000042B59E /* XCLocalSwiftPackageReference "MCDomain" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = MCDomain;
+		};
+		AB0BBCA42F91F0000042B59E /* XCLocalSwiftPackageReference "MCCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = MCCore;
+		};
+		AB0BBCA62F91F0000042B59E /* XCLocalSwiftPackageReference "MCInfrastructure" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = MCInfrastructure;
+		};
+		AB0BBCA82F91F0000042B59E /* XCLocalSwiftPackageReference "MCFeatures" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = MCFeatures;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AB0BBCA12F91F0000042B59E /* MCShared */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MCShared;
+		};
+		AB0BBCA32F91F0000042B59E /* MCDomain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MCDomain;
+		};
+		AB0BBCA52F91F0000042B59E /* MCCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MCCore;
+		};
+		AB0BBCA72F91F0000042B59E /* MCInfrastructure */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MCInfrastructure;
+		};
+		AB0BBCA92F91F0000042B59E /* MCFeatures */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MCFeatures;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AB0BBC6E2F91DBA60042B59E /* Project object */;
 }
