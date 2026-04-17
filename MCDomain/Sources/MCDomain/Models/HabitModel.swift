@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-public final class Habit {
+public final class HabitModel {
     public var id: UUID
     public var name: String
     public var icon: String
@@ -19,10 +19,10 @@ public final class Habit {
     public var updatedAt: Date
     public var syncStatus: SyncStatus
 
-    public var category: Category?
+    public var category: CategoryModel?
 
-    @Relationship(deleteRule: .cascade, inverse: \HabitLog.habit)
-    public var logs: [HabitLog]
+    @Relationship(deleteRule: .cascade, inverse: \HabitLogModel.habit)
+    public var logs: [HabitLogModel]
 
     public var frequency: HabitFrequency {
         get {
@@ -61,7 +61,7 @@ public final class Habit {
         routine: Routine = .anytime,
         isArchived: Bool = false,
         templateID: UUID? = nil,
-        category: Category? = nil
+        category: CategoryModel? = nil
     ) {
         self.id = id
         self.name = name
@@ -78,7 +78,6 @@ public final class Habit {
         self.syncStatus = .pendingUpload
         self.logs = []
 
-        // Decompose frequency into flat fields
         switch frequency {
         case .daily:
             self.frequencyType = .daily

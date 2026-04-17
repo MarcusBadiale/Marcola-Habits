@@ -1,5 +1,5 @@
 
-public extension Habit {
+public extension HabitModel {
     func toDTO() -> HabitDTO {
         HabitDTO(
             id: id,

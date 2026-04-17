@@ -1,6 +1,6 @@
 import Foundation
 
-public extension HabitLog {
+public extension HabitLogModel {
     func toDTO() -> HabitLogDTO {
         HabitLogDTO(
             id: id,

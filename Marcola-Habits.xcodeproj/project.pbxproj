@@ -14,7 +14,11 @@
 		AB213CB12F920064001ED198 /* MCPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCB32F91F0000042B59E /* MCPersistence */; };
 		AB213CB22F920064001ED198 /* MCSyncAPI in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCB42F91F0000042B59E /* MCSyncAPI */; };
 		AB213CB32F920064001ED198 /* MCSync in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCB52F91F0000042B59E /* MCSync */; };
-		AB213CB02F920064001ED198 /* MCFeatures in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCA92F91F0000042B59E /* MCFeatures */; };
+		AB7998C32F92989E00ABAB8B /* MarcolasPattern in Frameworks */ = {isa = PBXBuildFile; productRef = AB7998C22F92989E00ABAB8B /* MarcolasPattern */; };
+		AB7998C82F92A60300ABAB8B /* MCCategories in Frameworks */ = {isa = PBXBuildFile; productRef = AB7998C72F92A60300ABAB8B /* MCCategories */; };
+		AB7998CA2F92A60300ABAB8B /* MCHome in Frameworks */ = {isa = PBXBuildFile; productRef = AB7998C92F92A60300ABAB8B /* MCHome */; };
+		AB7998CC2F92A60300ABAB8B /* MCSettings in Frameworks */ = {isa = PBXBuildFile; productRef = AB7998CB2F92A60300ABAB8B /* MCSettings */; };
+		AB7998CE2F92A60300ABAB8B /* MCStats in Frameworks */ = {isa = PBXBuildFile; productRef = AB7998CD2F92A60300ABAB8B /* MCStats */; };
 		ABC1EC0B2F91EA5A000CE928 /* MCShared in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCA12F91F0000042B59E /* MCShared */; };
 /* End PBXBuildFile section */
 
@@ -64,14 +68,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AB213CB02F920064001ED198 /* MCFeatures in Frameworks */,
+				AB7998C32F92989E00ABAB8B /* MarcolasPattern in Frameworks */,
 				AB213CB12F920064001ED198 /* MCPersistence in Frameworks */,
 				AB213CB22F920064001ED198 /* MCSyncAPI in Frameworks */,
+				AB7998CA2F92A60300ABAB8B /* MCHome in Frameworks */,
 				AB213CB32F920064001ED198 /* MCSync in Frameworks */,
 				AB213CAE2F920064001ED198 /* MCDesignSystem in Frameworks */,
 				AB213CAD2F920064001ED198 /* MCNavigation in Frameworks */,
+				AB7998CC2F92A60300ABAB8B /* MCSettings in Frameworks */,
 				AB213CAC2F920064001ED198 /* MCNavigationAPI in Frameworks */,
 				AB213CAB2F920064001ED198 /* MCDomain in Frameworks */,
+				AB7998CE2F92A60300ABAB8B /* MCStats in Frameworks */,
+				AB7998C82F92A60300ABAB8B /* MCCategories in Frameworks */,
 				ABC1EC0B2F91EA5A000CE928 /* MCShared in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -102,7 +110,15 @@
 				ABD108932F91E5C4006415FF /* Marcola-Habits.app */,
 				ABD108942F91E5C4006415FF /* Marcola-HabitsTests.xctest */,
 				ABD108952F91E5C4006415FF /* Marcola-HabitsUITests.xctest */,
+				AB7998C62F92A60300ABAB8B /* Frameworks */,
 			);
+			sourceTree = "<group>";
+		};
+		AB7998C62F92A60300ABAB8B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -133,7 +149,11 @@
 				AB0BBCB32F91F0000042B59E /* MCPersistence */,
 				AB0BBCB42F91F0000042B59E /* MCSyncAPI */,
 				AB0BBCB52F91F0000042B59E /* MCSync */,
-				AB0BBCA92F91F0000042B59E /* MCFeatures */,
+				AB7998C22F92989E00ABAB8B /* MarcolasPattern */,
+				AB7998C72F92A60300ABAB8B /* MCCategories */,
+				AB7998C92F92A60300ABAB8B /* MCHome */,
+				AB7998CB2F92A60300ABAB8B /* MCSettings */,
+				AB7998CD2F92A60300ABAB8B /* MCStats */,
 			);
 			productName = "Marcola-Habits";
 			productReference = ABD108932F91E5C4006415FF /* Marcola-Habits.app */;
@@ -223,6 +243,7 @@
 				AB0BBCA42F91F0000042B59E /* XCLocalSwiftPackageReference "MCCore" */,
 				AB0BBCA62F91F0000042B59E /* XCLocalSwiftPackageReference "MCInfrastructure" */,
 				AB0BBCA82F91F0000042B59E /* XCLocalSwiftPackageReference "MCFeatures" */,
+				AB7998C12F92989E00ABAB8B /* XCRemoteSwiftPackageReference "MarcolasPattern" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AB0BBC6D2F91DBA60042B59E;
@@ -668,6 +689,17 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		AB7998C12F92989E00ABAB8B /* XCRemoteSwiftPackageReference "MarcolasPattern" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MarcusBadiale/MarcolasPattern";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		AB0BBCA12F91F0000042B59E /* MCShared */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -676,6 +708,18 @@
 		AB0BBCA32F91F0000042B59E /* MCDomain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MCDomain;
+		};
+		AB0BBCB02F91F0000042B59E /* MCNavigationAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MCNavigationAPI;
+		};
+		AB0BBCB12F91F0000042B59E /* MCNavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MCNavigation;
+		};
+		AB0BBCB22F91F0000042B59E /* MCDesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MCDesignSystem;
 		};
 		AB0BBCB32F91F0000042B59E /* MCPersistence */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -689,21 +733,26 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MCSync;
 		};
-		AB0BBCA92F91F0000042B59E /* MCFeatures */ = {
+		AB7998C22F92989E00ABAB8B /* MarcolasPattern */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MCFeatures;
+			package = AB7998C12F92989E00ABAB8B /* XCRemoteSwiftPackageReference "MarcolasPattern" */;
+			productName = MarcolasPattern;
 		};
-		AB0BBCB02F91F0000042B59E /* MCNavigationAPI */ = {
+		AB7998C72F92A60300ABAB8B /* MCCategories */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MCNavigationAPI;
+			productName = MCCategories;
 		};
-		AB0BBCB12F91F0000042B59E /* MCNavigation */ = {
+		AB7998C92F92A60300ABAB8B /* MCHome */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MCNavigation;
+			productName = MCHome;
 		};
-		AB0BBCB22F91F0000042B59E /* MCDesignSystem */ = {
+		AB7998CB2F92A60300ABAB8B /* MCSettings */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MCDesignSystem;
+			productName = MCSettings;
+		};
+		AB7998CD2F92A60300ABAB8B /* MCStats */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MCStats;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

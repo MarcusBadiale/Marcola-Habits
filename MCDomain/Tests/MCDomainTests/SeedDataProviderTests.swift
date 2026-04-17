@@ -74,7 +74,7 @@ struct SeedDataProviderTests {
     @Test("populate insere categorias e templates no contexto", .tags(.seed))
     @MainActor
     func populateInsertsData() throws {
-        let schema = Schema([Category.self, Habit.self, HabitLog.self, HabitTemplate.self])
+        let schema = Schema([CategoryModel.self, HabitModel.self, HabitLogModel.self, HabitTemplateModel.self])
         let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: schema, configurations: config)
         let context = container.mainContext
@@ -82,8 +82,8 @@ struct SeedDataProviderTests {
         SeedDataProvider.populate(context)
         try context.save()
 
-        let categories = try context.fetch(FetchDescriptor<Category>())
-        let templates = try context.fetch(FetchDescriptor<HabitTemplate>())
+        let categories = try context.fetch(FetchDescriptor<CategoryModel>())
+        let templates = try context.fetch(FetchDescriptor<HabitTemplateModel>())
 
         #expect(categories.count == 5)
         #expect(templates.count == 10)

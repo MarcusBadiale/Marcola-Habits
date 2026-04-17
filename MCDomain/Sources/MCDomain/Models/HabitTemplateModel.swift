@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-public final class HabitTemplate {
+public final class HabitTemplateModel {
     public var id: UUID
     public var name: String
     public var icon: String
