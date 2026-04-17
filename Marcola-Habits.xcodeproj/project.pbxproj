@@ -11,7 +11,9 @@
 		AB213CAC2F920064001ED198 /* MCNavigationAPI in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCB02F91F0000042B59E /* MCNavigationAPI */; };
 		AB213CAD2F920064001ED198 /* MCNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCB12F91F0000042B59E /* MCNavigation */; };
 		AB213CAE2F920064001ED198 /* MCDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCB22F91F0000042B59E /* MCDesignSystem */; };
-		AB213CAF2F920064001ED198 /* MCInfrastructure in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCA72F91F0000042B59E /* MCInfrastructure */; };
+		AB213CB12F920064001ED198 /* MCPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCB32F91F0000042B59E /* MCPersistence */; };
+		AB213CB22F920064001ED198 /* MCSyncAPI in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCB42F91F0000042B59E /* MCSyncAPI */; };
+		AB213CB32F920064001ED198 /* MCSync in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCB52F91F0000042B59E /* MCSync */; };
 		AB213CB02F920064001ED198 /* MCFeatures in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCA92F91F0000042B59E /* MCFeatures */; };
 		ABC1EC0B2F91EA5A000CE928 /* MCShared in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCA12F91F0000042B59E /* MCShared */; };
 /* End PBXBuildFile section */
@@ -63,7 +65,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				AB213CB02F920064001ED198 /* MCFeatures in Frameworks */,
-				AB213CAF2F920064001ED198 /* MCInfrastructure in Frameworks */,
+				AB213CB12F920064001ED198 /* MCPersistence in Frameworks */,
+				AB213CB22F920064001ED198 /* MCSyncAPI in Frameworks */,
+				AB213CB32F920064001ED198 /* MCSync in Frameworks */,
 				AB213CAE2F920064001ED198 /* MCDesignSystem in Frameworks */,
 				AB213CAD2F920064001ED198 /* MCNavigation in Frameworks */,
 				AB213CAC2F920064001ED198 /* MCNavigationAPI in Frameworks */,
@@ -126,7 +130,9 @@
 				AB0BBCB02F91F0000042B59E /* MCNavigationAPI */,
 				AB0BBCB12F91F0000042B59E /* MCNavigation */,
 				AB0BBCB22F91F0000042B59E /* MCDesignSystem */,
-				AB0BBCA72F91F0000042B59E /* MCInfrastructure */,
+				AB0BBCB32F91F0000042B59E /* MCPersistence */,
+				AB0BBCB42F91F0000042B59E /* MCSyncAPI */,
+				AB0BBCB52F91F0000042B59E /* MCSync */,
 				AB0BBCA92F91F0000042B59E /* MCFeatures */,
 			);
 			productName = "Marcola-Habits";
@@ -671,9 +677,17 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MCDomain;
 		};
-		AB0BBCA72F91F0000042B59E /* MCInfrastructure */ = {
+		AB0BBCB32F91F0000042B59E /* MCPersistence */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MCInfrastructure;
+			productName = MCPersistence;
+		};
+		AB0BBCB42F91F0000042B59E /* MCSyncAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MCSyncAPI;
+		};
+		AB0BBCB52F91F0000042B59E /* MCSync */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MCSync;
 		};
 		AB0BBCA92F91F0000042B59E /* MCFeatures */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -20,7 +20,7 @@ let package = Package(
                 .product(name: "MCNavigationAPI", package: "MCCore"),
                 .product(name: "MCDesignSystem", package: "MCCore"),
                 .product(name: "MCDomain", package: "MCDomain"),
-                .product(name: "MCInfrastructure", package: "MCInfrastructure"),
+                .product(name: "MCSyncAPI", package: "MCInfrastructure"),
             ]
         ),
     ]

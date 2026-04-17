@@ -1,1 +1,0 @@
-// MCInfrastructure — deps: MCDomain, MCShared
