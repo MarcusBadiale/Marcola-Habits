@@ -1,5 +1,5 @@
 
-public extension Category {
+public extension CategoryModel {
     func toDTO() -> CategoryDTO {
         CategoryDTO(
             id: id,

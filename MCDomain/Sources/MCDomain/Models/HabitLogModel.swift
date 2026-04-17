@@ -3,7 +3,7 @@ import SwiftData
 import MCShared
 
 @Model
-public final class HabitLog {
+public final class HabitLogModel {
     public var id: UUID
     public var date: Date
     public var completed: Bool
@@ -13,7 +13,7 @@ public final class HabitLog {
     public var updatedAt: Date
     public var syncStatus: SyncStatus
 
-    public var habit: Habit?
+    public var habit: HabitModel?
 
     public init(
         id: UUID = UUID(),
@@ -21,7 +21,7 @@ public final class HabitLog {
         completed: Bool = false,
         count: Int = 0,
         note: String? = nil,
-        habit: Habit? = nil
+        habit: HabitModel? = nil
     ) {
         self.id = id
         self.date = date.startOfDay

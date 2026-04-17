@@ -6,15 +6,15 @@ import Foundation
 @Suite("Mappers — @Model -> DTO")
 struct MappersTests {
 
-    // MARK: - Category+DTO
+    // MARK: - CategoryModel+DTO
 
-    @Test("Category.toDTO() preserva todos os campos", .tags(.domain))
+    @Test("CategoryModel.toDTO() preserva todos os campos", .tags(.domain))
     @MainActor
     func categoryToDTO() throws {
         let container = try makeContainer()
         let context = container.mainContext
 
-        let category = Category(
+        let category = CategoryModel(
             name: "Saúde",
             icon: "heart.fill",
             colorHex: "#EF4444",
@@ -33,18 +33,18 @@ struct MappersTests {
         #expect(dto.isDefault == category.isDefault)
     }
 
-    // MARK: - Habit+DTO
+    // MARK: - HabitModel+DTO
 
-    @Test("Habit.toDTO() preserva todos os campos", .tags(.domain))
+    @Test("HabitModel.toDTO() preserva todos os campos", .tags(.domain))
     @MainActor
     func habitToDTO() throws {
         let container = try makeContainer()
         let context = container.mainContext
 
-        let category = Category(name: "Saúde", icon: "heart.fill", colorHex: "#EF4444")
+        let category = CategoryModel(name: "Saúde", icon: "heart.fill", colorHex: "#EF4444")
         context.insert(category)
 
-        let habit = Habit(
+        let habit = HabitModel(
             name: "Correr",
             icon: "figure.run",
             colorHex: "#3B82F6",
@@ -71,13 +71,13 @@ struct MappersTests {
         #expect(dto.templateID == nil)
     }
 
-    @Test("Habit.toDTO() com category nil resulta em categoryID nil", .tags(.domain))
+    @Test("HabitModel.toDTO() com category nil resulta em categoryID nil", .tags(.domain))
     @MainActor
     func habitToDTONilCategory() throws {
         let container = try makeContainer()
         let context = container.mainContext
 
-        let habit = Habit(name: "Meditar", icon: "brain.head.profile")
+        let habit = HabitModel(name: "Meditar", icon: "brain.head.profile")
         context.insert(habit)
 
         let dto = habit.toDTO()
@@ -85,19 +85,19 @@ struct MappersTests {
         #expect(dto.categoryID == nil)
     }
 
-    // MARK: - HabitLog+DTO
+    // MARK: - HabitLogModel+DTO
 
-    @Test("HabitLog.toDTO() preserva todos os campos", .tags(.domain))
+    @Test("HabitLogModel.toDTO() preserva todos os campos", .tags(.domain))
     @MainActor
     func habitLogToDTO() throws {
         let container = try makeContainer()
         let context = container.mainContext
 
-        let habit = Habit(name: "Meditar", icon: "brain.head.profile")
+        let habit = HabitModel(name: "Meditar", icon: "brain.head.profile")
         context.insert(habit)
 
         let today = Date.now
-        let log = HabitLog(date: today, completed: true, count: 1, note: "boa sessão", habit: habit)
+        let log = HabitLogModel(date: today, completed: true, count: 1, note: "boa sessão", habit: habit)
         context.insert(log)
 
         let dto = log.toDTO()
@@ -113,7 +113,7 @@ struct MappersTests {
 
     @MainActor
     private func makeContainer() throws -> ModelContainer {
-        let schema = Schema([Category.self, Habit.self, HabitLog.self, HabitTemplate.self])
+        let schema = Schema([CategoryModel.self, HabitModel.self, HabitLogModel.self, HabitTemplateModel.self])
         let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
         return try ModelContainer(for: schema, configurations: config)
     }

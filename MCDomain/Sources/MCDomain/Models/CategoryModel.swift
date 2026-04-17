@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-public final class Category {
+public final class CategoryModel {
     public var id: UUID
     public var name: String
     public var icon: String
@@ -13,8 +13,8 @@ public final class Category {
     public var updatedAt: Date
     public var syncStatus: SyncStatus
 
-    @Relationship(deleteRule: .cascade, inverse: \Habit.category)
-    public var habits: [Habit]
+    @Relationship(deleteRule: .cascade, inverse: \HabitModel.category)
+    public var habits: [HabitModel]
 
     public init(
         id: UUID = UUID(),

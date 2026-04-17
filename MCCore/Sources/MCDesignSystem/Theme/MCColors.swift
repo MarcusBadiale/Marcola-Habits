@@ -12,7 +12,8 @@ public enum MCColors {
 
     // MARK: - UI accents
 
-    public static let accent = Color(hex: "#3B82F6")
+    public static let accentHex = "#3B82F6"
+    public static let accent = Color(hex: accentHex)
     public static let success = Color(hex: "#22C55E")
     public static let warning = Color(hex: "#F59E0B")
     public static let danger = Color(hex: "#EF4444")

@@ -6,7 +6,11 @@ public final class Navigator: RouteRegistryAPI {
 
     private var factories: [String: RouteViewFactory] = [:]
 
-    public var paths: [Tab: [RouteEntry]] = [:]
+    public var todayPath: [RouteEntry] = []
+    public var categoriesPath: [RouteEntry] = []
+    public var statsPath: [RouteEntry] = []
+    public var settingsPath: [RouteEntry] = []
+
     public var activeTab: Tab = .today
     public var presentedRoute: RouteEntry? = nil
 
@@ -25,6 +29,25 @@ public final class Navigator: RouteRegistryAPI {
 
     public init() {}
 
+    private var activePath: [RouteEntry] {
+        get {
+            switch activeTab {
+            case .today: todayPath
+            case .categories: categoriesPath
+            case .stats: statsPath
+            case .settings: settingsPath
+            }
+        }
+        set {
+            switch activeTab {
+            case .today: todayPath = newValue
+            case .categories: categoriesPath = newValue
+            case .stats: statsPath = newValue
+            case .settings: settingsPath = newValue
+            }
+        }
+    }
+
     // MARK: - RouteRegistryAPI
 
     public func register(_ route: String, factory: @escaping RouteViewFactory) {
@@ -34,17 +57,16 @@ public final class Navigator: RouteRegistryAPI {
     // MARK: - Navigation
 
     public func push(_ route: String, params: RouteParams = [:]) {
-        paths[activeTab, default: []].append(RouteEntry(route: route, params: params))
+        activePath.append(RouteEntry(route: route, params: params))
     }
 
     public func pop() {
-        guard var stack = paths[activeTab], !stack.isEmpty else { return }
-        stack.removeLast()
-        paths[activeTab] = stack
+        guard !activePath.isEmpty else { return }
+        activePath.removeLast()
     }
 
     public func popToRoot() {
-        paths[activeTab] = []
+        activePath = []
     }
 
     public func present(_ route: String, params: RouteParams = [:]) {
