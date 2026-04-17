@@ -1,1 +1,0 @@
-// MCShared — zero deps
