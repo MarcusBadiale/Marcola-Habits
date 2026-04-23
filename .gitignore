@@ -64,4 +64,5 @@ fastlane/test_output
 
 # IDE / AI
 .cursor/
+.claude/
 CLAUDE.md
