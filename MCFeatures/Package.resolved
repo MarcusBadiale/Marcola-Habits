@@ -1,6 +1,15 @@
 {
-  "originHash" : "5fc41c56d6e002103a82fb0a50eb7bd6f671542c703ecf51e5f3d793f1482a0a",
+  "originHash" : "b58fd0bffbce071ec7a3fc886c629b5ae030c24712425e68b6dfd8e22771c6ba",
   "pins" : [
+    {
+      "identity" : "marcolaspattern",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MarcusBadiale/MarcolasPattern",
+      "state" : {
+        "revision" : "8b4ce8b7fa89289cc17602d3eb2e384a2819dfe4",
+        "version" : "1.2.3"
+      }
+    },
     {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",

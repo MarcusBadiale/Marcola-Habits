@@ -1,12 +1,12 @@
 import MarcolasPattern
 import MCDomain
-import MCNavigation
+import MCNavigationAPI
 import MCShared
 import SwiftData
 import SwiftUI
 
-@MCViewModel
-struct AddHabitViewModel {
+@MCProvider
+struct AddHabitProvider {
     @Query(sort: \CategoryModel.sortOrder) var categories: [CategoryModel]
     @Query var templates: [HabitTemplateModel]
 
@@ -22,8 +22,8 @@ struct AddHabitViewModel {
     @State var routine: Routine = .anytime
     @State var showingTemplates: Bool = false
 
-    @Environment(\.modelContext) var modelContext
-    @Environment(Navigator.self) var navigator
+    @Environment(\.modelContext) var modelContext: ModelContext
+    @Environment(\.navigator) var navigator: NavigatorAPI
 
     var canSave: Bool {
         !name.trimmingCharacters(in: .whitespaces).isEmpty

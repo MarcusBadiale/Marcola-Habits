@@ -1,13 +1,11 @@
 import SwiftUI
 
-public struct SettingsView: View {
-    public init() {}
-
-    public var body: some View {
+struct SettingsView: View {
+    var body: some View {
         ContentUnavailableView(
-            "Configurações",
+            "Settings",
             systemImage: "gearshape.fill",
-            description: Text("Em breve")
+            description: Text("Coming soon")
         )
         .navigationTitle("Settings")
     }

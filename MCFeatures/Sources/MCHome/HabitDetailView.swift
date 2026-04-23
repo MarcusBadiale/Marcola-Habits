@@ -1,9 +1,10 @@
 import MarcolasPattern
 import MCDesignSystem
 import MCDomain
+import SwiftData
 import SwiftUI
 
-@MCView(HabitDetailViewModel.self)
+@MCView(HabitDetailProvider.self)
 struct HabitDetailView: View {
     init(habitID: UUID) {
         self._data = .init(habitID: habitID)
@@ -35,9 +36,9 @@ struct HabitDetailView: View {
                 }
 
                 if habit.targetCount > 1 {
-                    Section("Meta") {
+                    Section("Goal") {
                         HStack {
-                            Text("Objetivo")
+                            Text("Target")
                             Spacer()
                             Text("\(habit.targetCount) \(habit.targetUnit)")
                                 .foregroundStyle(.secondary)
@@ -45,18 +46,18 @@ struct HabitDetailView: View {
                     }
                 }
 
-                Section("Rotina") {
+                Section("Routine") {
                     HStack {
-                        Text("Período")
+                        Text("Period")
                         Spacer()
                         Text(routineLabel(habit.routine))
                             .foregroundStyle(.secondary)
                     }
                 }
 
-                Section("Últimos registros") {
+                Section("Recent logs") {
                     if data.recentLogs.isEmpty {
-                        Text("Nenhum registro ainda")
+                        Text("No records yet")
                             .foregroundStyle(.secondary)
                     } else {
                         ForEach(data.recentLogs) { log in
@@ -78,7 +79,7 @@ struct HabitDetailView: View {
                     Button(role: .destructive) {
                         data.archiveHabit()
                     } label: {
-                        Label("Arquivar hábito", systemImage: "archivebox")
+                        Label("Archive habit", systemImage: "archivebox")
                     }
                     .accessibilityIdentifier("habit-detail-archive-button")
                 }
@@ -86,7 +87,7 @@ struct HabitDetailView: View {
             .navigationTitle(habit.name)
         } else {
             ContentUnavailableView(
-                "Hábito não encontrado",
+                "Habit not found",
                 systemImage: "questionmark.circle"
             )
         }
@@ -94,10 +95,10 @@ struct HabitDetailView: View {
 
     private func routineLabel(_ routine: Routine) -> String {
         switch routine {
-        case .morning: "Manhã"
-        case .afternoon: "Tarde"
-        case .evening: "Noite"
-        case .anytime: "Qualquer hora"
+        case .morning: "Morning"
+        case .afternoon: "Afternoon"
+        case .evening: "Evening"
+        case .anytime: "Any time"
         }
     }
 }

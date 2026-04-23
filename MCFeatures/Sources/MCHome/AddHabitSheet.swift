@@ -1,14 +1,11 @@
 import MarcolasPattern
 import MCDesignSystem
 import MCDomain
+import SwiftData
 import SwiftUI
 
-@MCView(AddHabitViewModel.self)
+@MCView(AddHabitProvider.self)
 struct AddHabitSheet: View {
-    init() {
-        self._data = .init()
-    }
-
     var body: some View {
         NavigationStack {
             Form {
@@ -16,17 +13,17 @@ struct AddHabitSheet: View {
                     Button {
                         data.$showingTemplates.wrappedValue = true
                     } label: {
-                        Label("Escolher template", systemImage: "doc.on.doc")
+                        Label("Choose template", systemImage: "doc.on.doc")
                     }
                     .accessibilityIdentifier("add-habit-template-button")
                 }
 
-                Section("Informações") {
-                    TextField("Nome do hábito", text: data.$name)
+                Section("Info") {
+                    TextField("Habit name", text: data.$name)
                         .accessibilityIdentifier("add-habit-name-field")
 
                     HStack {
-                        Text("Ícone")
+                        Text("Icon")
                         Spacer()
                         Image(systemName: data.icon)
                             .foregroundStyle(Color(hex: data.colorHex))
@@ -36,13 +33,13 @@ struct AddHabitSheet: View {
                     IconPicker(selectedIcon: data.$icon)
                 }
 
-                Section("Cor") {
+                Section("Color") {
                     ColorGridPicker(selectedHex: data.$colorHex)
                 }
 
-                Section("Categoria") {
-                    Picker("Categoria", selection: data.$selectedCategoryID) {
-                        Text("Nenhuma").tag(UUID?.none)
+                Section("Category") {
+                    Picker("Category", selection: data.$selectedCategoryID) {
+                        Text("None").tag(UUID?.none)
                         ForEach(data.categories) { category in
                             Label(category.name, systemImage: category.icon)
                                 .tag(UUID?.some(category.id))
@@ -51,11 +48,11 @@ struct AddHabitSheet: View {
                     .accessibilityIdentifier("add-habit-category-picker")
                 }
 
-                Section("Frequência") {
-                    Picker("Tipo", selection: data.$frequencyType) {
-                        Text("Diário").tag(FrequencyType.daily)
-                        Text("Dias específicos").tag(FrequencyType.specificDays)
-                        Text("Vezes por semana").tag(FrequencyType.timesPerWeek)
+                Section("Frequency") {
+                    Picker("Type", selection: data.$frequencyType) {
+                        Text("Daily").tag(FrequencyType.daily)
+                        Text("Specific days").tag(FrequencyType.specificDays)
+                        Text("Times per week").tag(FrequencyType.timesPerWeek)
                     }
                     .accessibilityIdentifier("add-habit-frequency-picker")
 
@@ -64,38 +61,38 @@ struct AddHabitSheet: View {
                     }
 
                     if data.frequencyType == .timesPerWeek {
-                        Stepper("\(data.timesPerWeek)x por semana", value: data.$timesPerWeek, in: 1...7)
+                        Stepper("\(data.timesPerWeek)x per week", value: data.$timesPerWeek, in: 1...7)
                     }
                 }
 
-                Section("Meta") {
-                    Stepper("Quantidade: \(data.targetCount)", value: data.$targetCount, in: 1...100)
+                Section("Goal") {
+                    Stepper("Count: \(data.targetCount)", value: data.$targetCount, in: 1...100)
                         .accessibilityIdentifier("add-habit-target-stepper")
 
                     if data.targetCount > 1 {
-                        TextField("Unidade (ex: copos, minutos)", text: data.$targetUnit)
+                        TextField("Unit (e.g. cups, minutes)", text: data.$targetUnit)
                             .accessibilityIdentifier("add-habit-unit-field")
                     }
                 }
 
-                Section("Rotina") {
-                    Picker("Período", selection: data.$routine) {
-                        Text("Qualquer hora").tag(Routine.anytime)
-                        Text("Manhã").tag(Routine.morning)
-                        Text("Tarde").tag(Routine.afternoon)
-                        Text("Noite").tag(Routine.evening)
+                Section("Routine") {
+                    Picker("Period", selection: data.$routine) {
+                        Text("Any time").tag(Routine.anytime)
+                        Text("Morning").tag(Routine.morning)
+                        Text("Afternoon").tag(Routine.afternoon)
+                        Text("Evening").tag(Routine.evening)
                     }
                     .accessibilityIdentifier("add-habit-routine-picker")
                 }
             }
-            .navigationTitle("Novo hábito")
+            .navigationTitle("New habit")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") { data.cancel() }
+                    Button("Cancel") { data.cancel() }
                         .accessibilityIdentifier("add-habit-cancel-button")
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Salvar") { data.save() }
+                    Button("Save") { data.save() }
                         .disabled(!data.canSave)
                         .accessibilityIdentifier("add-habit-save-button")
                 }
@@ -113,8 +110,8 @@ private struct WeekdayPicker: View {
     @Binding var selectedDays: Set<Weekday>
 
     private let weekdays: [(Weekday, String)] = [
-        (.monday, "Seg"), (.tuesday, "Ter"), (.wednesday, "Qua"),
-        (.thursday, "Qui"), (.friday, "Sex"), (.saturday, "Sáb"), (.sunday, "Dom"),
+        (.monday, "Mon"), (.tuesday, "Tue"), (.wednesday, "Wed"),
+        (.thursday, "Thu"), (.friday, "Fri"), (.saturday, "Sat"), (.sunday, "Sun"),
     ]
 
     var body: some View {
@@ -211,7 +208,7 @@ private struct TemplatePicker: View {
             .navigationTitle("Templates")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Fechar") { dismiss() }
+                    Button("Close") { dismiss() }
                 }
             }
         }
