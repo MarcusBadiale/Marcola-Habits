@@ -1,14 +1,12 @@
 import MarcolasPattern
 import MCDesignSystem
 import MCDomain
+import SwiftData
 import SwiftUI
 
-@MCView(CategoriesViewModel.self)
-public struct CategoriesView: View {
-    public init() {
-        self._data = .init()
-    }
-    public var body: some View {
+@MCView(CategoriesProvider.self)
+struct CategoriesView: View {
+    var body: some View {
         List {
             ForEach(Array(data.categories.enumerated()), id: \.element.id) { index, category in
                 CategoryRow(
@@ -35,7 +33,7 @@ public struct CategoriesView: View {
             }
         }
         .listStyle(.plain)
-        .navigationTitle("Categorias")
+        .navigationTitle("Categories")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button { data.showAddCategory() } label: {
@@ -62,7 +60,7 @@ private struct CategoryRow: View {
                 Text(category.name)
                     .font(MCTypography.headline)
 
-                Text("\(habitCount) hábito\(habitCount == 1 ? "" : "s")")
+                Text("\(habitCount) habit\(habitCount == 1 ? "" : "s")")
                     .font(MCTypography.caption)
                     .foregroundStyle(.secondary)
             }

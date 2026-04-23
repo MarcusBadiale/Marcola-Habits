@@ -2,20 +2,43 @@ import MCNavigationAPI
 import SwiftUI
 
 @Observable
-public final class Navigator: RouteRegistryAPI {
+public final class Navigator: RouteRegistryAPI, NavigatorAPI {
 
     private var factories: [String: RouteViewFactory] = [:]
 
-    public var todayPath: [RouteEntry] = []
-    public var categoriesPath: [RouteEntry] = []
-    public var statsPath: [RouteEntry] = []
-    public var settingsPath: [RouteEntry] = []
+    public var tabs: [TabState] = [
+        TabState(id: .today, title: "Today", icon: "sun.max.fill"),
+        TabState(id: .categories, title: "Categories", icon: "square.grid.2x2.fill"),
+        TabState(id: .stats, title: "Stats", icon: "chart.bar.fill"),
+        TabState(id: .settings, title: "Settings", icon: "gearshape.fill"),
+    ]
 
-    public var activeTab: Tab = .today
+    public var activeTab: TabID = .today
     public var presentedRoute: RouteEntry? = nil
 
-    public enum Tab: String, CaseIterable, Hashable, Sendable {
-        case today, categories, stats, settings
+    public struct TabState: Identifiable {
+        public let id: TabID
+        public let title: String
+        public let icon: String
+        public var path: [RouteEntry] = []
+        private var rootViewFactory: (@MainActor @Sendable () -> AnyView)?
+
+        public init(id: TabID, title: String, icon: String) {
+            self.id = id
+            self.title = title
+            self.icon = icon
+        }
+
+        @ViewBuilder @MainActor
+        public var rootView: some View {
+            if let factory = rootViewFactory {
+                factory()
+            }
+        }
+
+        mutating func setRoot(_ factory: @escaping @MainActor @Sendable () -> AnyView) {
+            rootViewFactory = factory
+        }
     }
 
     public struct RouteEntry: Identifiable, Hashable {
@@ -29,22 +52,11 @@ public final class Navigator: RouteRegistryAPI {
 
     public init() {}
 
-    private var activePath: [RouteEntry] {
-        get {
-            switch activeTab {
-            case .today: todayPath
-            case .categories: categoriesPath
-            case .stats: statsPath
-            case .settings: settingsPath
-            }
-        }
+    public subscript(_ id: TabID) -> TabState {
+        get { tabs.first(where: { $0.id == id })! }
         set {
-            switch activeTab {
-            case .today: todayPath = newValue
-            case .categories: categoriesPath = newValue
-            case .stats: statsPath = newValue
-            case .settings: settingsPath = newValue
-            }
+            guard let i = tabs.firstIndex(where: { $0.id == id }) else { return }
+            tabs[i] = newValue
         }
     }
 
@@ -54,19 +66,23 @@ public final class Navigator: RouteRegistryAPI {
         factories[route] = factory
     }
 
+    public func registerRoot(for tab: TabID, factory: @escaping @MainActor @Sendable () -> AnyView) {
+        self[tab].setRoot(factory)
+    }
+
     // MARK: - Navigation
 
     public func push(_ route: String, params: RouteParams = [:]) {
-        activePath.append(RouteEntry(route: route, params: params))
+        self[activeTab].path.append(RouteEntry(route: route, params: params))
     }
 
     public func pop() {
-        guard !activePath.isEmpty else { return }
-        activePath.removeLast()
+        guard !self[activeTab].path.isEmpty else { return }
+        self[activeTab].path.removeLast()
     }
 
     public func popToRoot() {
-        activePath = []
+        self[activeTab].path = []
     }
 
     public func present(_ route: String, params: RouteParams = [:]) {

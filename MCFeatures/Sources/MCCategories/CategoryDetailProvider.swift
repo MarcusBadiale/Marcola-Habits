@@ -2,20 +2,20 @@ import MarcolasPattern
 import MCCategoriesAPI
 import MCDomain
 import MCHomeAPI
-import MCNavigation
+import MCNavigationAPI
 import MCShared
 import SwiftData
 import SwiftUI
 
-@MCViewModel
-struct CategoryDetailViewModel {
+@MCProvider
+struct CategoryDetailProvider {
     let categoryID: UUID
 
     @Query var allCategories: [CategoryModel]
     @Query var allLogs: [HabitLogModel]
 
-    @Environment(\.modelContext) var modelContext
-    @Environment(Navigator.self) var navigator
+    @Environment(\.modelContext) var modelContext: ModelContext
+    @Environment(\.navigator) var navigator: NavigatorAPI
 
     var category: CategoryModel? {
         allCategories.first { $0.id == categoryID }

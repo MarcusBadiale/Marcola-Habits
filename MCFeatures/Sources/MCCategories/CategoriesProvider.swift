@@ -1,17 +1,17 @@
 import MarcolasPattern
 import MCCategoriesAPI
 import MCDomain
-import MCNavigation
+import MCNavigationAPI
 import MCShared
 import SwiftData
 import SwiftUI
 
-@MCViewModel
-struct CategoriesViewModel {
+@MCProvider
+struct CategoriesProvider {
     @Query(sort: \CategoryModel.sortOrder) var categories: [CategoryModel]
 
-    @Environment(\.modelContext) var modelContext
-    @Environment(Navigator.self) var navigator
+    @Environment(\.modelContext) var modelContext: ModelContext
+    @Environment(\.navigator) var navigator: NavigatorAPI
 
     func habitCount(for category: CategoryModel) -> Int {
         category.habits.filter { !$0.isArchived }.count

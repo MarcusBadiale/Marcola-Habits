@@ -20,7 +20,7 @@ let package = Package(
         .package(path: "../MCDomain"),
         .package(path: "../MCShared"),
         .package(path: "../MCInfrastructure"),
-        .package(path: "../../MarcolasPattern"),
+        .package(url: "https://github.com/MarcusBadiale/MarcolasPattern.git", exact: "1.2.3"),
     ],
     targets: [
         // MARK: - Home
@@ -34,7 +34,6 @@ let package = Package(
                 .product(name: "MCShared", package: "MCShared"),
                 .product(name: "MCDomain", package: "MCDomain"),
                 .product(name: "MCDesignSystem", package: "MCCore"),
-                .product(name: "MCNavigation", package: "MCCore"),
                 .product(name: "MCNavigationAPI", package: "MCCore"),
             ]
         ),
@@ -50,7 +49,6 @@ let package = Package(
                 .product(name: "MCShared", package: "MCShared"),
                 .product(name: "MCDomain", package: "MCDomain"),
                 .product(name: "MCDesignSystem", package: "MCCore"),
-                .product(name: "MCNavigation", package: "MCCore"),
                 .product(name: "MCNavigationAPI", package: "MCCore"),
             ]
         ),
@@ -65,7 +63,6 @@ let package = Package(
                 .product(name: "MCShared", package: "MCShared"),
                 .product(name: "MCDomain", package: "MCDomain"),
                 .product(name: "MCDesignSystem", package: "MCCore"),
-                .product(name: "MCNavigation", package: "MCCore"),
                 .product(name: "MCNavigationAPI", package: "MCCore"),
             ]
         ),
@@ -81,7 +78,6 @@ let package = Package(
                 .product(name: "MCDomain", package: "MCDomain"),
                 .product(name: "MCSyncAPI", package: "MCInfrastructure"),
                 .product(name: "MCDesignSystem", package: "MCCore"),
-                .product(name: "MCNavigation", package: "MCCore"),
                 .product(name: "MCNavigationAPI", package: "MCCore"),
             ]
         ),

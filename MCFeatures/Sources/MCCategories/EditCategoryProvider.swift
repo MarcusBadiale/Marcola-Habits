@@ -1,12 +1,12 @@
 import MarcolasPattern
 import MCDomain
-import MCNavigation
+import MCNavigationAPI
 import MCShared
 import SwiftData
 import SwiftUI
 
-@MCViewModel
-struct EditCategoryViewModel {
+@MCProvider
+struct EditCategoryProvider {
     let editingCategoryID: UUID?
 
     @Query var allCategories: [CategoryModel]
@@ -16,8 +16,8 @@ struct EditCategoryViewModel {
     @State var colorHex: String = "#3B82F6"
     @State var didLoadExisting: Bool = false
 
-    @Environment(\.modelContext) var modelContext
-    @Environment(Navigator.self) var navigator
+    @Environment(\.modelContext) var modelContext: ModelContext
+    @Environment(\.navigator) var navigator: NavigatorAPI
 
     var isEditing: Bool { editingCategoryID != nil }
 

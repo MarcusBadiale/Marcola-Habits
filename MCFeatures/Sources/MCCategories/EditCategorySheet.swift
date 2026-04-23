@@ -1,9 +1,10 @@
 import MarcolasPattern
 import MCDesignSystem
 import MCDomain
+import SwiftData
 import SwiftUI
 
-@MCView(EditCategoryViewModel.self)
+@MCView(EditCategoryProvider.self)
 struct EditCategorySheet: View {
     init(editingCategoryID: UUID?) {
         self._data = .init(editingCategoryID: editingCategoryID)
@@ -12,12 +13,12 @@ struct EditCategorySheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Informações") {
-                    TextField("Nome da categoria", text: data.$name)
+                Section("Info") {
+                    TextField("Category name", text: data.$name)
                         .accessibilityIdentifier("edit-category-name-field")
 
                     HStack {
-                        Text("Ícone")
+                        Text("Icon")
                         Spacer()
                         Image(systemName: data.icon)
                             .foregroundStyle(Color(hex: data.colorHex))
@@ -27,18 +28,18 @@ struct EditCategorySheet: View {
                     IconPicker(selectedIcon: data.$icon)
                 }
 
-                Section("Cor") {
+                Section("Color") {
                     ColorGridPicker(selectedHex: data.$colorHex)
                 }
             }
-            .navigationTitle(data.isEditing ? "Editar categoria" : "Nova categoria")
+            .navigationTitle(data.isEditing ? "Edit category" : "New category")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") { data.cancel() }
+                    Button("Cancel") { data.cancel() }
                         .accessibilityIdentifier("edit-category-cancel-button")
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Salvar") { data.save() }
+                    Button("Save") { data.save() }
                         .disabled(!data.canSave)
                         .accessibilityIdentifier("edit-category-save-button")
                 }

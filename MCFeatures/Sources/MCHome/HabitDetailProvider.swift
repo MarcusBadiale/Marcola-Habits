@@ -1,19 +1,19 @@
 import MarcolasPattern
 import MCDomain
-import MCNavigation
+import MCNavigationAPI
 import MCShared
 import SwiftData
 import SwiftUI
 
-@MCViewModel
-struct HabitDetailViewModel {
+@MCProvider
+struct HabitDetailProvider {
     let habitID: UUID
 
     @Query var allHabits: [HabitModel]
     @Query var allLogs: [HabitLogModel]
 
-    @Environment(\.modelContext) var modelContext
-    @Environment(Navigator.self) var navigator
+    @Environment(\.modelContext) var modelContext: ModelContext
+    @Environment(\.navigator) var navigator: NavigatorAPI
 
     var habit: HabitModel? {
         allHabits.first { $0.id == habitID }
@@ -47,12 +47,22 @@ struct HabitDetailViewModel {
         guard let habit else { return "" }
         switch habit.frequency {
         case .daily:
-            return "Todos os dias"
+            return "Every day"
         case .specificDays(let days):
-            let names = days.sorted(by: { $0.rawValue < $1.rawValue }).map { weekdayName($0) }
+            let names = days.sorted(by: { $0.rawValue < $1.rawValue }).map { day -> String in
+                switch day {
+                case .sunday: "Sun"
+                case .monday: "Mon"
+                case .tuesday: "Tue"
+                case .wednesday: "Wed"
+                case .thursday: "Thu"
+                case .friday: "Fri"
+                case .saturday: "Sat"
+                }
+            }
             return names.joined(separator: ", ")
         case .timesPerWeek(let times):
-            return "\(times)x por semana"
+            return "\(times)x per week"
         }
     }
 
@@ -61,17 +71,5 @@ struct HabitDetailViewModel {
         habit.isArchived = true
         habit.updatedAt = Date.now
         navigator.pop()
-    }
-
-    private func weekdayName(_ day: Weekday) -> String {
-        switch day {
-        case .sunday: "Dom"
-        case .monday: "Seg"
-        case .tuesday: "Ter"
-        case .wednesday: "Qua"
-        case .thursday: "Qui"
-        case .friday: "Sex"
-        case .saturday: "Sáb"
-        }
     }
 }

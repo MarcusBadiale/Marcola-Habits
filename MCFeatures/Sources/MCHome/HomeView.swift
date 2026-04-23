@@ -1,21 +1,19 @@
 import MarcolasPattern
 import MCDesignSystem
 import MCDomain
+import SwiftData
 import SwiftUI
 
-@MCView(HomeViewModel.self)
-public struct HomeView: View {
-    public init() {
-        self._data = .init()
-    }
-    public var body: some View {
+@MCView(HomeProvider.self)
+struct HomeView: View {
+    var body: some View {
         VStack(spacing: 0) {
             DateCarousel(selectedDate: data.$selectedDate)
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: MCSpacing.sm) {
                     CategoryChip(
-                        name: "Todos",
+                        name: "All",
                         icon: "square.grid.2x2",
                         colorHex: MCColors.accentHex,
                         isSelected: data.selectedCategoryID == nil
@@ -62,7 +60,7 @@ public struct HomeView: View {
             }
             .listStyle(.plain)
         }
-        .navigationTitle("Hoje")
+        .navigationTitle("Today")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button { data.showAddHabit() } label: {

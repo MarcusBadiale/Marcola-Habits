@@ -1,13 +1,13 @@
 import MarcolasPattern
 import MCDomain
 import MCHomeAPI
-import MCNavigation
+import MCNavigationAPI
 import MCShared
 import SwiftData
 import SwiftUI
 
-@MCViewModel
-struct HomeViewModel {
+@MCProvider
+struct HomeProvider {
     @Query(filter: #Predicate<HabitModel> { !$0.isArchived }, sort: \HabitModel.name)
     var habits: [HabitModel]
 
@@ -20,8 +20,8 @@ struct HomeViewModel {
     @State var selectedDate: Date = Date.now.startOfDay
     @State var selectedCategoryID: UUID? = nil
 
-    @Environment(\.modelContext) var modelContext
-    @Environment(Navigator.self) var navigator
+    @Environment(\.modelContext) var modelContext: ModelContext
+    @Environment(\.navigator) var navigator: NavigatorAPI
 
     var filteredHabits: [HabitModel] {
         let scheduled = habits.filter { $0.isScheduled(for: selectedDate) }

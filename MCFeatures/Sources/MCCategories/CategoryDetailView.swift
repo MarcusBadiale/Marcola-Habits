@@ -1,9 +1,10 @@
 import MarcolasPattern
 import MCDesignSystem
 import MCDomain
+import SwiftData
 import SwiftUI
 
-@MCView(CategoryDetailViewModel.self)
+@MCView(CategoryDetailProvider.self)
 struct CategoryDetailView: View {
     init(categoryID: UUID) {
         self._data = .init(categoryID: categoryID)
@@ -22,7 +23,7 @@ struct CategoryDetailView: View {
                             Text(category.name)
                                 .font(MCTypography.title)
 
-                            Text("\(data.activeHabits.count) hábito\(data.activeHabits.count == 1 ? "" : "s") ativo\(data.activeHabits.count == 1 ? "" : "s")")
+                            Text("\(data.activeHabits.count) active habit\(data.activeHabits.count == 1 ? "" : "s")")
                                 .font(MCTypography.callout)
                                 .foregroundStyle(.secondary)
                         }
@@ -30,9 +31,9 @@ struct CategoryDetailView: View {
                     .padding(.vertical, MCSpacing.sm)
                 }
 
-                Section("Hábitos") {
+                Section("Habits") {
                     if data.activeHabits.isEmpty {
-                        Text("Nenhum hábito nesta categoria")
+                        Text("No habits in this category")
                             .foregroundStyle(.secondary)
                     } else {
                         ForEach(Array(data.activeHabits.enumerated()), id: \.element.id) { index, habit in
@@ -58,14 +59,14 @@ struct CategoryDetailView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button { data.showEditCategory() } label: {
-                        Text("Editar")
+                        Text("Edit")
                     }
                     .accessibilityIdentifier("category-detail-edit-button")
                 }
             }
         } else {
             ContentUnavailableView(
-                "Categoria não encontrada",
+                "Category not found",
                 systemImage: "questionmark.circle"
             )
         }
