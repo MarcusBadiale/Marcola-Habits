@@ -69,9 +69,52 @@ struct SeedDataProviderTests {
         #expect(templates.allSatisfy { $0.defaultTargetCount > 0 })
     }
 
+    // MARK: - defaultHabits
+
+    @Test("retorna 6 hábitos default", .tags(.seed))
+    func habitsCount() {
+        let categories = SeedDataProvider.defaultCategories()
+        let habits = SeedDataProvider.defaultHabits(categories: categories)
+        #expect(habits.count == 6)
+    }
+
+    @Test("nomes dos hábitos são únicos", .tags(.seed))
+    func habitNamesUnique() {
+        let categories = SeedDataProvider.defaultCategories()
+        let habits = SeedDataProvider.defaultHabits(categories: categories)
+        let names = habits.map { $0.name }
+        #expect(Set(names).count == names.count)
+    }
+
+    @Test("todos os hábitos têm categoria", .tags(.seed))
+    func habitsHaveCategory() {
+        let categories = SeedDataProvider.defaultCategories()
+        let habits = SeedDataProvider.defaultHabits(categories: categories)
+        #expect(habits.allSatisfy { $0.category != nil })
+    }
+
+    // MARK: - defaultLogs
+
+    @Test("gera logs para todos os hábitos", .tags(.seed))
+    func logsGeneratedForAllHabits() {
+        let categories = SeedDataProvider.defaultCategories()
+        let habits = SeedDataProvider.defaultHabits(categories: categories)
+        let logs = SeedDataProvider.defaultLogs(for: habits)
+        let habitsWithLogs = Set(logs.compactMap { $0.habit?.name })
+        #expect(habitsWithLogs.count == habits.count)
+    }
+
+    @Test("todos os logs têm referência ao hábito", .tags(.seed))
+    func logsHaveHabitReference() {
+        let categories = SeedDataProvider.defaultCategories()
+        let habits = SeedDataProvider.defaultHabits(categories: categories)
+        let logs = SeedDataProvider.defaultLogs(for: habits)
+        #expect(logs.allSatisfy { $0.habit != nil })
+    }
+
     // MARK: - populate
 
-    @Test("populate insere categorias e templates no contexto", .tags(.seed))
+    @Test("populate insere categorias, templates, hábitos e logs no contexto", .tags(.seed))
     @MainActor
     func populateInsertsData() throws {
         let schema = Schema([CategoryModel.self, HabitModel.self, HabitLogModel.self, HabitTemplateModel.self])
@@ -84,8 +127,12 @@ struct SeedDataProviderTests {
 
         let categories = try context.fetch(FetchDescriptor<CategoryModel>())
         let templates = try context.fetch(FetchDescriptor<HabitTemplateModel>())
+        let habits = try context.fetch(FetchDescriptor<HabitModel>())
+        let logs = try context.fetch(FetchDescriptor<HabitLogModel>())
 
         #expect(categories.count == 5)
         #expect(templates.count == 10)
+        #expect(habits.count == 6)
+        #expect(logs.count > 0)
     }
 }

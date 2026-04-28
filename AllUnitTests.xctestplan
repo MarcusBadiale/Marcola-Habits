@@ -1,0 +1,59 @@
+{
+  "configurations" : [
+    {
+      "id" : "ABF24C0A-7B86-4864-ADC8-6A281B730C5C",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:MCStats",
+        "identifier" : "MCStatsTests",
+        "name" : "MCStatsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:MCHome",
+        "identifier" : "MCHomeTests",
+        "name" : "MCHomeTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:MCSettings",
+        "identifier" : "MCSettingsTests",
+        "name" : "MCSettingsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:MCDomain",
+        "identifier" : "MCDomainTests",
+        "name" : "MCDomainTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:MCCategories",
+        "identifier" : "MCCategoriesTests",
+        "name" : "MCCategoriesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:MCShared",
+        "identifier" : "MCSharedTests",
+        "name" : "MCSharedTests"
+      }
+    }
+  ],
+  "version" : 1
+}

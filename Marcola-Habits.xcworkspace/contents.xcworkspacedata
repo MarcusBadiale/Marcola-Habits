@@ -2,7 +2,28 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:MCFeatures">
+      location = "group:MCHomeAPI">
+   </FileRef>
+   <FileRef
+      location = "group:MCCategoriesAPI">
+   </FileRef>
+   <FileRef
+      location = "group:MCStatsAPI">
+   </FileRef>
+   <FileRef
+      location = "group:MCSettingsAPI">
+   </FileRef>
+   <FileRef
+      location = "group:MCHome">
+   </FileRef>
+   <FileRef
+      location = "group:MCCategories">
+   </FileRef>
+   <FileRef
+      location = "group:MCStats">
+   </FileRef>
+   <FileRef
+      location = "group:MCSettings">
    </FileRef>
    <FileRef
       location = "group:MCInfrastructure">
@@ -17,6 +38,31 @@
       location = "group:MCShared">
    </FileRef>
    <FileRef
+      location = "group:DemoShared">
+   </FileRef>
+   <FileRef
       location = "container:Marcola-Habits.xcodeproj">
+   </FileRef>
+   <Group
+      location = "container:"
+      name = "Demo Apps">
+      <FileRef
+         location = "container:MCHome/DemoApp/HomeDemoApp.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "container:MCCategories/DemoApp/CategoriesDemoApp.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "container:MCStats/DemoApp/StatsDemoApp.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "container:MCSettings/DemoApp/SettingsDemoApp.xcodeproj">
+      </FileRef>
+   </Group>
+   <FileRef
+      location = "group:AllUITests.xctestplan">
+   </FileRef>
+   <FileRef
+      location = "group:AllUnitTests.xctestplan">
    </FileRef>
 </Workspace>
