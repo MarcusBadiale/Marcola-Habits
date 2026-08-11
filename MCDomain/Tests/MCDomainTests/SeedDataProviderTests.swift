@@ -1,4 +1,5 @@
 import Testing
+import Foundation
 import SwiftData
 @testable import MCDomain
 
@@ -110,6 +111,45 @@ struct SeedDataProviderTests {
         let habits = SeedDataProvider.defaultHabits(categories: categories)
         let logs = SeedDataProvider.defaultLogs(for: habits)
         #expect(logs.allSatisfy { $0.habit != nil })
+    }
+
+    @Test("logs cobrem ao menos 90 dias — o maior recorte da tela de Stats", .tags(.seed))
+    func logsCoverNinetyDays() throws {
+        let categories = SeedDataProvider.defaultCategories()
+        let habits = SeedDataProvider.defaultHabits(categories: categories)
+        let logs = SeedDataProvider.defaultLogs(for: habits)
+
+        let oldest = try #require(logs.map(\.date).min())
+        let today = Calendar.current.startOfDay(for: .now)
+        let span = try #require(Calendar.current.dateComponents([.day], from: oldest, to: today).day)
+
+        #expect(span >= 90)
+    }
+
+    @Test("logs são determinísticos entre chamadas", .tags(.seed))
+    func logsAreDeterministic() {
+        let categories = SeedDataProvider.defaultCategories()
+        let habits = SeedDataProvider.defaultHabits(categories: categories)
+
+        // Comparar por (hábito, data, completed): os `id` são UUID novos a cada chamada.
+        let fingerprint = { (logs: [HabitLogModel]) in
+            logs.map { "\($0.habit?.name ?? "")|\($0.date.timeIntervalSince1970)|\($0.completed)" }
+        }
+
+        #expect(fingerprint(SeedDataProvider.defaultLogs(for: habits))
+                == fingerprint(SeedDataProvider.defaultLogs(for: habits)))
+    }
+
+    @Test("hábitos do seed são anteriores ao histórico gerado", .tags(.seed))
+    func habitsAreBackdatedBeforeHistory() {
+        let categories = SeedDataProvider.defaultCategories()
+        let habits = SeedDataProvider.defaultHabits(categories: categories)
+        let today = Calendar.current.startOfDay(for: .now)
+
+        #expect(habits.allSatisfy { habit in
+            let days = Calendar.current.dateComponents([.day], from: habit.createdAt, to: today).day ?? 0
+            return days >= SeedDataProvider.historyDays
+        })
     }
 
     // MARK: - populate

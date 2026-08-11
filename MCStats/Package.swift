@@ -20,6 +20,7 @@ let package = Package(
             dependencies: [
                 "MCStatsAPI",
                 .product(name: "MCShared", package: "MCShared"),
+                .product(name: "MCMacros", package: "MCShared"),
                 .product(name: "MCDomain", package: "MCDomain"),
                 .product(name: "MCDesignSystem", package: "MCCore"),
                 .product(name: "MCNavigationAPI", package: "MCCore"),

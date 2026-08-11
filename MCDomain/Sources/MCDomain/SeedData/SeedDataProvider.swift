@@ -62,7 +62,7 @@ public enum SeedDataProvider {
 
     public static func defaultHabits(categories: [CategoryModel]) -> [HabitModel] {
         let cat = Dictionary(uniqueKeysWithValues: categories.map { ($0.name, $0) })
-        return [
+        let habits = [
             HabitModel(name: "Beber água", icon: "drop.fill", colorHex: "#EF4444",
                        frequency: .daily, targetCount: 8, targetUnit: "copos",
                        routine: .morning, category: cat["Saúde"]),
@@ -82,44 +82,13 @@ public enum SeedDataProvider {
                        frequency: .daily, targetCount: 1, targetUnit: "dia",
                        routine: .anytime, category: cat["Produtividade"]),
         ]
-    }
 
-    // MARK: - Logs
-
-    public static func defaultLogs(for habits: [HabitModel]) -> [HabitLogModel] {
-        // Pattern por hábito: index 0 = hoje, 1 = ontem... (1=feito, 0=não)
-        let completions = [
-            "011111111111011011101", // Beber água: streak 11, hoje pendente
-            "111110111111101110110", // Meditar: streak 4 + hoje
-            "111111111111111111111", // Exercício: sempre (pula fins de semana)
-            "001010110100101011010", // Ler: esporádico
-            "111111111111100111011", // Journaling: streak 12 + hoje
-            "010110100101011011010", // Sem redes sociais: ~50%
-        ]
-        let countRanges: [(min: Int, max: Int)] = [
-            (5, 8), (1, 1), (1, 1), (15, 30), (1, 1), (1, 1),
-        ]
-
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        var logs: [HabitLogModel] = []
-
-        for (index, habit) in habits.enumerated() {
-            let pattern = completions[index]
-            let range = countRanges[index]
-
-            for dayOffset in 0..<pattern.count {
-                let date = calendar.date(byAdding: .day, value: -dayOffset, to: today)!
-                guard habit.isScheduled(for: date) else { continue }
-
-                let char = pattern[pattern.index(pattern.startIndex, offsetBy: dayOffset)]
-                let completed = char == "1"
-                let count = completed ? range.min + (dayOffset % (range.max - range.min + 1)) : 0
-
-                logs.append(HabitLogModel(date: date, completed: completed, count: count, habit: habit))
-            }
+        // Backdate: o seed gera ~90 dias de histórico, então os hábitos precisam ser mais velhos
+        // que isso — senão a tela de Stats mostra um hábito "criado hoje" com 3 meses de log.
+        if let createdAt = Calendar.current.date(byAdding: .day, value: -120, to: .now) {
+            habits.forEach { $0.createdAt = createdAt }
         }
 
-        return logs
+        return habits
     }
 }
