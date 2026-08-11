@@ -20,7 +20,7 @@ struct HomeProviderTests {
         )
         var sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [],
-            modelContext: context, navigator: SpyNavigator(),
+            modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator(),
             selectedDate: Date.now.startOfDay
         )
         #expect(sut.filteredHabits.count == 1)
@@ -42,7 +42,7 @@ struct HomeProviderTests {
         )
         var sut = HomeProvider.Mock(
             habits: [habit1, habit2], categories: [category], allLogs: [],
-            modelContext: context, navigator: SpyNavigator(),
+            modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator(),
             selectedCategoryID: category.id
         )
         #expect(sut.filteredHabits.count == 1)
@@ -61,7 +61,7 @@ struct HomeProviderTests {
         )
         var sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [],
-            modelContext: context, navigator: SpyNavigator()
+            modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator()
         )
         #expect(sut.isCompleted(habit) == false)
     }
@@ -79,7 +79,7 @@ struct HomeProviderTests {
         )
         var sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [log],
-            modelContext: context, navigator: SpyNavigator()
+            modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator()
         )
         #expect(sut.isCompleted(habit) == true)
     }
@@ -97,7 +97,7 @@ struct HomeProviderTests {
         )
         var sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [partialLog],
-            modelContext: context, navigator: SpyNavigator()
+            modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator()
         )
         #expect(sut.isCompleted(habit) == false)
     }
@@ -114,7 +114,7 @@ struct HomeProviderTests {
         )
         var sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [],
-            modelContext: context, navigator: SpyNavigator()
+            modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator()
         )
         #expect(sut.progress(habit) == 0)
     }
@@ -132,7 +132,7 @@ struct HomeProviderTests {
         )
         var sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [log],
-            modelContext: context, navigator: SpyNavigator()
+            modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator()
         )
         #expect(sut.progress(habit) == 0.5)
     }
@@ -150,7 +150,7 @@ struct HomeProviderTests {
         )
         var sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [log],
-            modelContext: context, navigator: SpyNavigator()
+            modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator()
         )
         #expect(sut.progress(habit) == 1.0)
     }
@@ -168,7 +168,7 @@ struct HomeProviderTests {
         )
         var sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [],
-            modelContext: context, navigator: spy
+            modelContext: context, navigator: spy, stats: StatsCalculator()
         )
         sut.goToDetail(habit)
         #expect(spy.pushCalls.count == 1)
@@ -182,7 +182,7 @@ struct HomeProviderTests {
         let spy = SpyNavigator()
         var sut = HomeProvider.Mock(
             habits: [], categories: [], allLogs: [],
-            modelContext: context, navigator: spy
+            modelContext: context, navigator: spy, stats: StatsCalculator()
         )
         sut.showAddHabit()
         #expect(spy.presentCalls.count == 1)
@@ -203,7 +203,7 @@ struct HomeProviderTests {
         context.insert(habit)
         var sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [],
-            modelContext: context, navigator: SpyNavigator()
+            modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator()
         )
         sut.toggleCompletion(habit)
         let logs = try context.fetch(FetchDescriptor<HabitLogModel>())

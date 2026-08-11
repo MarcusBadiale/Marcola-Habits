@@ -40,54 +40,45 @@ Marcola-Habits/
 ├── Marcola-Habits.xcworkspace      ← workspace com tudo
 │
 │   ── Foundation ──────────────────────────────
-├── MCShared/                        ← utilities, DI container, extensions
-│   └── Package.swift
-├── MCDomain/                        ← models, DTOs, protocols, SwiftData
+├── MCShared/                        ← MCProvider, Provider<T>, @Mockable, extensions
+│   └── Package.swift                   (targets: MCShared, MCMacros, MCMacrosPlugin)
+├── MCDomain/                        ← models, DTOs, protocols, SwiftData, EnvironmentKeys
 │   └── Package.swift
 ├── MCCore/                          ← NavigationAPI, Navigation, DesignSystem
 │   └── Package.swift
 ├── MCInfrastructure/                ← Persistence, SyncAPI, Sync, Networking
 │   └── Package.swift
 │
-│   ── Feature APIs (packages solo, zero dependências pesadas) ──
-├── MCHomeAPI/
-│   ├── Package.swift
-│   └── Sources/MCHomeAPI/HomeRoutes.swift
-├── MCCategoriesAPI/
-│   ├── Package.swift
-│   └── Sources/MCCategoriesAPI/CategoriesRoutes.swift
-├── MCStatsAPI/
-│   ├── Package.swift
-│   └── Sources/MCStatsAPI/StatsRoutes.swift
-├── MCSettingsAPI/
-│   ├── Package.swift
-│   └── Sources/MCSettingsAPI/SettingsRoutes.swift
-│
-│   ── Features (cada uma é um package independente) ──
+│   ── Features (API + Impl como targets do mesmo package) ──
 ├── MCHome/
-│   ├── Package.swift
-│   ├── Sources/MCHome/              ← implementação
-│   ├── Tests/MCHomeTests/           ← unit tests
+│   ├── Package.swift                ← expõe MCHomeAPI e MCHome
+│   ├── Sources/MCHomeAPI/           ← [API] HomeRoutes (zero dependências)
+│   ├── Sources/MCHome/              ← [IMPL] views, providers, route registry
+│   ├── Tests/MCHomeTests/           ← unit tests (+ Helpers/SpyNavigator, TestHelpers)
 │   └── DemoApp/                     ← mini app dentro do package
 │       ├── HomeDemoApp.xcodeproj    ← criado manualmente no Xcode, commitado
-│       ├── Sources/
+│       ├── HomeDemoApp/
 │       │   └── HomeDemoApp.swift
-│       └── UITests/
-│           └── HomeUITests.swift
+│       └── HomeDemoAppUITests/
+│           ├── HomeDemoAppUITests.swift
+│           └── Pages/               ← HomePage, AddHabitPage, HabitDetailPage
 │
 ├── MCCategories/                    ← mesma estrutura
 ├── MCStats/
 ├── MCSettings/
 │
 │   ── Demo infrastructure ──
-└── DemoShared/
-    ├── Package.swift
-    └── Sources/DemoShared/
-        ├── FakeNavigator.swift      ← implementa NavigatorAPI + RouteRegistryAPI
-        ├── FakeSyncService.swift    ← implementa SyncServiceAPI
-        ├── DemoDependencies.swift   ← registro de deps compartilhadas
-        ├── DemoSeedData.swift       ← popula SwiftData com dados fake
-        └── DemoRootView.swift       ← shell genérico com setup no task
+├── DemoShared/
+│   ├── Package.swift
+│   └── Sources/DemoShared/
+│       ├── FakeNavigator.swift      ← implementa NavigatorAPI + RouteRegistryAPI
+│       ├── FakeSyncService.swift    ← implementa SyncServiceAPI
+│       ├── DemoSeedData.swift       ← popula SwiftData com dados fake
+│       └── DemoRootView.swift       ← shell genérico com setup no task
+│
+│   ── Test plans ──
+├── AllUnitTests.xctestplan          ← agrega os testTargets dos packages
+└── AllUITests.xctestplan            ← agrega os UI tests dos 4 Demo Apps
 ```
 
 ---
@@ -102,75 +93,61 @@ MCHomeAPI          MCCategoriesAPI      MCStatsAPI      MCSettingsAPI
  MCHome              MCCategories         MCStats        MCSettings
     │                    │                   │               │
     ├─ MCHomeAPI         ├─ MCCategoriesAPI  ├─ MCStatsAPI   ├─ MCSettingsAPI
-    ├─ MCCategoriesAPI   ├─ MCHomeAPI        ├─ MCCore       ├─ MCSyncAPI
-    ├─ MCCore            ├─ MCCore           ├─ MCDomain     ├─ MCCore
-    ├─ MCDomain          ├─ MCDomain         └─ MCShared     ├─ MCDomain
-    └─ MCShared          └─ MCShared                         └─ MCShared
+    ├─ MCCore            ├─ MCHomeAPI        ├─ MCCore       ├─ MCSyncAPI
+    ├─ MCDomain          ├─ MCCore           ├─ MCDomain     ├─ MCCore
+    ├─ MCShared          ├─ MCDomain         └─ MCShared     ├─ MCDomain
+    └─ MCMacros          ├─ MCShared                         └─ MCShared
+                         └─ MCMacros
 ```
 
-**Nenhuma feature depende de outra feature.** Só de APIs.
-MCHome e MCCategories podem depender de MCCategoriesAPI e MCHomeAPI
-respectivamente, sem referência cruzada entre packages.
+**Nenhuma feature depende da implementação de outra feature.** Só de APIs.
+MCCategories depende de MCHomeAPI (pra navegar pro detalhe de hábito) sem nunca
+importar MCHome.
 
-### Por que APIs em packages separados?
+MCStats e MCSettings não puxam MCMacros porque ainda não têm provider.
 
-Se as APIs ficassem dentro dos packages de feature (ex: MCHomeAPI como target
-dentro de MCHome), teríamos referência cruzada:
-- MCHome (package) lista MCCategories (package) como dependency
-- MCCategories (package) lista MCHome (package) como dependency
+### Onde ficam as APIs: targets, não packages
 
-Mesmo que os **targets** não sejam circulares, os **packages** se referenciam
-mutuamente e o SPM pode reclamar.
+O desenho inicial deste guia colocava cada API num **package solo** (`MCHomeAPI/Package.swift`),
+pra evitar que dois packages de feature se referenciassem mutuamente. Na prática isso virou
+4 Package.swift extras pra 4 arquivos de constantes.
 
-Com APIs em packages separados, não existe nenhuma referência cruzada.
+A decisão final foi consolidar: cada feature tem **um** Package.swift que expõe dois targets,
+`FeatureAPI` e `Feature`.
+
+```swift
+// MCHome/Package.swift
+products: [
+    .library(name: "MCHomeAPI", targets: ["MCHomeAPI"]),
+    .library(name: "MCHome", targets: ["MCHome"]),
+],
+targets: [
+    .target(name: "MCHomeAPI"),          // zero dependências
+    .target(name: "MCHome", dependencies: ["MCHomeAPI", ...]),
+]
+```
+
+O risco original — referência cruzada entre packages — não se materializou. `MCCategories`
+lista `.package(path: "../MCHome")` e consome só o produto `MCHomeAPI`; o SPM resolve sem
+reclamar porque o grafo de **targets** não é circular (`MCCategories → MCHomeAPI`, e
+`MCHomeAPI` não depende de nada).
+
+O limite: se algum dia MCHome precisar de `MCCategoriesAPI` **e** MCCategories continuar
+precisando de `MCHomeAPI`, os dois packages se referenciam mutuamente. Aí, ou o SPM aceita
+(targets seguem acíclicos), ou a saída é extrair as route keys pra um package comum — não
+voltar aos 4 packages solo.
+
+Ganhos da consolidação:
+- 4 Package.swift a menos, 4 entradas a menos no workspace
+- `Package.resolved` único por feature
+- API e Impl versionam juntos, que é como eles mudam na prática
 
 ---
 
-## 4. Package.swift — APIs
+## 4. Package.swift — Features (API + Impl)
 
-Cada API é um package ultra-leve sem dependências:
-
-### MCHomeAPI/Package.swift
-
-```swift
-// swift-tools-version: 6.0
-import PackageDescription
-
-let package = Package(
-    name: "MCHomeAPI",
-    platforms: [.iOS(.v18), .macOS(.v15)],
-    products: [
-        .library(name: "MCHomeAPI", targets: ["MCHomeAPI"]),
-    ],
-    targets: [
-        .target(name: "MCHomeAPI"),
-    ]
-)
-```
-
-### MCCategoriesAPI/Package.swift
-
-```swift
-// swift-tools-version: 6.0
-import PackageDescription
-
-let package = Package(
-    name: "MCCategoriesAPI",
-    platforms: [.iOS(.v18), .macOS(.v15)],
-    products: [
-        .library(name: "MCCategoriesAPI", targets: ["MCCategoriesAPI"]),
-    ],
-    targets: [
-        .target(name: "MCCategoriesAPI"),
-    ]
-)
-```
-
-MCStatsAPI e MCSettingsAPI seguem o mesmo padrão.
-
----
-
-## 5. Package.swift — Features
+Cada feature tem um Package.swift que expõe os dois targets. O target API não tem
+dependência nenhuma.
 
 ### MCHome/Package.swift
 
@@ -182,24 +159,22 @@ let package = Package(
     name: "MCHome",
     platforms: [.iOS(.v18), .macOS(.v15)],
     products: [
+        .library(name: "MCHomeAPI", targets: ["MCHomeAPI"]),
         .library(name: "MCHome", targets: ["MCHome"]),
     ],
     dependencies: [
-        .package(path: "../MCHomeAPI"),
-        .package(path: "../MCCategoriesAPI"),
         .package(path: "../MCCore"),
         .package(path: "../MCDomain"),
         .package(path: "../MCShared"),
-        .package(url: "https://github.com/MarcusBadiale/MarcolasPattern.git", exact: "1.2.3"),
     ],
     targets: [
+        .target(name: "MCHomeAPI"),
         .target(
             name: "MCHome",
             dependencies: [
-                .product(name: "MCHomeAPI", package: "MCHomeAPI"),
-                .product(name: "MCCategoriesAPI", package: "MCCategoriesAPI"),
-                .product(name: "MarcolasPattern", package: "MarcolasPattern"),
+                "MCHomeAPI",
                 .product(name: "MCShared", package: "MCShared"),
+                .product(name: "MCMacros", package: "MCShared"),
                 .product(name: "MCDomain", package: "MCDomain"),
                 .product(name: "MCDesignSystem", package: "MCCore"),
                 .product(name: "MCNavigationAPI", package: "MCCore"),
@@ -214,114 +189,59 @@ let package = Package(
 )
 ```
 
+`MCMacros` (produto do package MCShared) é o que habilita `@Mockable` nos providers.
+Feature sem provider não precisa dele.
+
 ### MCCategories/Package.swift
 
-```swift
-// swift-tools-version: 6.0
-import PackageDescription
+Igual, mais `../MCHome` pra consumir `MCHomeAPI`:
 
-let package = Package(
-    name: "MCCategories",
-    platforms: [.iOS(.v18), .macOS(.v15)],
-    products: [
-        .library(name: "MCCategories", targets: ["MCCategories"]),
-    ],
+```swift
     dependencies: [
-        .package(path: "../MCCategoriesAPI"),
-        .package(path: "../MCHomeAPI"),
+        .package(path: "../MCHome"),
         .package(path: "../MCCore"),
         .package(path: "../MCDomain"),
         .package(path: "../MCShared"),
-        .package(url: "https://github.com/MarcusBadiale/MarcolasPattern.git", exact: "1.2.3"),
     ],
     targets: [
+        .target(name: "MCCategoriesAPI"),
         .target(
             name: "MCCategories",
             dependencies: [
-                .product(name: "MCCategoriesAPI", package: "MCCategoriesAPI"),
-                .product(name: "MCHomeAPI", package: "MCHomeAPI"),
-                .product(name: "MarcolasPattern", package: "MarcolasPattern"),
+                "MCCategoriesAPI",
+                .product(name: "MCHomeAPI", package: "MCHome"),   // só a API
                 .product(name: "MCShared", package: "MCShared"),
+                .product(name: "MCMacros", package: "MCShared"),
                 .product(name: "MCDomain", package: "MCDomain"),
                 .product(name: "MCDesignSystem", package: "MCCore"),
                 .product(name: "MCNavigationAPI", package: "MCCore"),
             ]
         ),
-        .testTarget(
-            name: "MCCategoriesTests",
-            dependencies: ["MCCategories"]
-        ),
+        .testTarget(name: "MCCategoriesTests", dependencies: ["MCCategories"]),
     ],
-    swiftLanguageModes: [.v5]
-)
 ```
 
 ### MCStats/Package.swift
 
-```swift
-// swift-tools-version: 6.0
-import PackageDescription
-
-let package = Package(
-    name: "MCStats",
-    platforms: [.iOS(.v18), .macOS(.v15)],
-    products: [
-        .library(name: "MCStats", targets: ["MCStats"]),
-    ],
-    dependencies: [
-        .package(path: "../MCStatsAPI"),
-        .package(path: "../MCCore"),
-        .package(path: "../MCDomain"),
-        .package(path: "../MCShared"),
-        .package(url: "https://github.com/MarcusBadiale/MarcolasPattern.git", exact: "1.2.3"),
-    ],
-    targets: [
-        .target(
-            name: "MCStats",
-            dependencies: [
-                .product(name: "MCStatsAPI", package: "MCStatsAPI"),
-                .product(name: "MarcolasPattern", package: "MarcolasPattern"),
-                .product(name: "MCShared", package: "MCShared"),
-                .product(name: "MCDomain", package: "MCDomain"),
-                .product(name: "MCDesignSystem", package: "MCCore"),
-                .product(name: "MCNavigationAPI", package: "MCCore"),
-            ]
-        ),
-        .testTarget(
-            name: "MCStatsTests",
-            dependencies: ["MCStats"]
-        ),
-    ],
-    swiftLanguageModes: [.v5]
-)
-```
+Igual ao MCHome, sem `MCMacros` (ainda não tem provider).
 
 ### MCSettings/Package.swift
 
-```swift
-// swift-tools-version: 6.0
-import PackageDescription
+Igual, mais `../MCInfrastructure` pra consumir `MCSyncAPI`:
 
-let package = Package(
-    name: "MCSettings",
-    platforms: [.iOS(.v18), .macOS(.v15)],
-    products: [
-        .library(name: "MCSettings", targets: ["MCSettings"]),
-    ],
+```swift
     dependencies: [
-        .package(path: "../MCSettingsAPI"),
         .package(path: "../MCCore"),
         .package(path: "../MCDomain"),
         .package(path: "../MCShared"),
         .package(path: "../MCInfrastructure"),
-        .package(url: "https://github.com/MarcusBadiale/MarcolasPattern.git", exact: "1.2.3"),
     ],
     targets: [
+        .target(name: "MCSettingsAPI"),
         .target(
             name: "MCSettings",
             dependencies: [
-                .product(name: "MCSettingsAPI", package: "MCSettingsAPI"),
-                .product(name: "MarcolasPattern", package: "MarcolasPattern"),
+                "MCSettingsAPI",
                 .product(name: "MCShared", package: "MCShared"),
                 .product(name: "MCDomain", package: "MCDomain"),
                 .product(name: "MCSyncAPI", package: "MCInfrastructure"),
@@ -329,14 +249,40 @@ let package = Package(
                 .product(name: "MCNavigationAPI", package: "MCCore"),
             ]
         ),
-        .testTarget(
-            name: "MCSettingsTests",
-            dependencies: ["MCSettings"]
-        ),
+        .testTarget(name: "MCSettingsTests", dependencies: ["MCSettings"]),
     ],
-    swiftLanguageModes: [.v5]
-)
 ```
+
+### MCShared/Package.swift — o package do macro
+
+MCShared é o único com dependência externa (swift-syntax), por causa do `@Mockable`:
+
+```swift
+    products: [
+        .library(name: "MCShared", targets: ["MCShared"]),
+        .library(name: "MCMacros", targets: ["MCMacros"]),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "600.0.0"),
+    ],
+    targets: [
+        .target(name: "MCShared"),
+        .macro(
+            name: "MCMacrosPlugin",
+            dependencies: [
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+            ]
+        ),
+        .target(name: "MCMacros", dependencies: ["MCMacrosPlugin"]),
+        .testTarget(name: "MCSharedTests", dependencies: ["MCShared"]),
+        .testTarget(name: "MCMacrosTests", dependencies: [...]),
+    ]
+```
+
+`MCMacrosPlugin` é um `.macro` target (roda no host, em build time). `MCMacros` é o que as
+features importam. Ver MOCKABLE_IMPLEMENTATION.md pro detalhe do macro.
 
 ---
 
@@ -501,22 +447,14 @@ public final class FakeSyncService: SyncServiceAPI, @unchecked Sendable {
 }
 ```
 
-### DemoShared/Sources/DemoShared/DemoDependencies.swift
+### ~~DemoShared/Sources/DemoShared/DemoDependencies.swift~~ (removido)
+
+Existiu pra registrar `StatsCalculatorAPI` no `DependencyContainer`. Com a DI por
+`EnvironmentKey` (default real dentro do próprio MCDomain), não há nada pra registrar — o
+arquivo foi deletado e cada Demo App só sobrescreve o que quer:
 
 ```swift
-import MCDomain
-import MCShared
-
-/// Registra dependências compartilhadas entre todos os Demo Apps.
-enum DemoDependencies {
-    static func registerAll() {
-        let container = DependencyContainer.shared
-
-        container.register(StatsCalculatorAPI.self) {
-            StatsCalculator()
-        }
-    }
-}
+.environment(\.syncService, FakeSyncService())
 ```
 
 ### DemoShared/Sources/DemoShared/DemoSeedData.swift
@@ -647,13 +585,13 @@ Todos importam também: MCDomain, MCShared, MCDesignSystem (transitivamente).
 **Nenhum demo app importa:** MCNavigation, MCCategories (no HomeDemoApp),
 MCHome (no CategoriesDemoApp), MCSync, MCPersistence, MCNetworking.
 
-### MCHome/DemoApp/Sources/HomeDemoApp.swift
+### MCHome/DemoApp/HomeDemoApp/HomeDemoApp.swift
 
 ```swift
 import DemoShared
 import MCHome
 import MCHomeAPI
-import MCDomain
+import MCNavigationAPI
 import SwiftData
 import SwiftUI
 
@@ -661,172 +599,41 @@ import SwiftUI
 struct HomeDemoApp: App {
     @State private var navigator = FakeNavigator()
 
-    init() {
-        DemoDependencies.registerAll()
-    }
-
     var body: some Scene {
         WindowGroup {
             DemoRootView(navigator: navigator, tab: .today) { nav in
                 HomeRouteRegistry.register(in: nav)
             }
         }
-        .modelContainer(Self.makeContainer())
-    }
-
-    private static func makeContainer() -> ModelContainer {
-        let schema = Schema([
-            CategoryModel.self, HabitModel.self,
-            HabitLogModel.self, HabitTemplateModel.self,
-        ])
-        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        do {
-            let container = try ModelContainer(for: schema, configurations: config)
-            DemoSeedData.populate(container.mainContext)
-            return container
-        } catch {
-            fatalError("Failed to create demo container: \(error)")
-        }
+        .modelContainer(DemoSeedData.makeContainer())
     }
 }
 ```
 
-### MCCategories/DemoApp/Sources/CategoriesDemoApp.swift
+É só isso. Sem `init()`, sem registro de dependências: o `DemoRootView` injeta
+`\.navigator` internamente, e os defaults dos `EnvironmentKey` cobrem stats e sync.
+`DemoSeedData.makeContainer()` monta o container in-memory já populado.
+
+### MCCategories/DemoApp/CategoriesDemoApp/CategoriesDemoAppApp.swift
+
+Idem, com `tab: .categories` e `CategoriesRouteRegistry`. Também importa `MCHomeAPI`, porque
+Categories navega pro detalhe de hábito — e no demo essa rota não está registrada, então o
+`FakeNavigator` cai no fallback de "rota não encontrada" em vez de crashar.
+
+### MCStats/DemoApp/StatsDemoApp/StatsDemoAppApp.swift
+
+Idem, com `tab: .stats` e `StatsRouteRegistry`.
+
+### MCSettings/DemoApp/SettingsDemoApp/SettingsDemoAppApp.swift
+
+Idem, com `tab: .settings` e `SettingsRouteRegistry`. Este sobrescreve o sync com o fake:
 
 ```swift
-import DemoShared
-import MCCategories
-import MCCategoriesAPI
-import MCDomain
-import SwiftData
-import SwiftUI
-
-@main
-struct CategoriesDemoApp: App {
-    @State private var navigator = FakeNavigator()
-
-    init() {
-        DemoDependencies.registerAll()
-    }
-
-    var body: some Scene {
-        WindowGroup {
-            DemoRootView(navigator: navigator, tab: .categories) { nav in
-                CategoriesRouteRegistry.register(in: nav)
-            }
-        }
-        .modelContainer(Self.makeContainer())
-    }
-
-    private static func makeContainer() -> ModelContainer {
-        let schema = Schema([
-            CategoryModel.self, HabitModel.self,
-            HabitLogModel.self, HabitTemplateModel.self,
-        ])
-        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        do {
-            let container = try ModelContainer(for: schema, configurations: config)
-            DemoSeedData.populate(container.mainContext)
-            return container
-        } catch {
-            fatalError("Failed to create demo container: \(error)")
-        }
-    }
+DemoRootView(navigator: navigator, tab: .settings) { nav in
+    SettingsRouteRegistry.register(in: nav)
 }
+.environment(\.syncService, FakeSyncService())
 ```
-
-### MCStats/DemoApp/Sources/StatsDemoApp.swift
-
-```swift
-import DemoShared
-import MCStats
-import MCStatsAPI
-import MCDomain
-import SwiftData
-import SwiftUI
-
-@main
-struct StatsDemoApp: App {
-    @State private var navigator = FakeNavigator()
-
-    init() {
-        DemoDependencies.registerAll()
-    }
-
-    var body: some Scene {
-        WindowGroup {
-            DemoRootView(navigator: navigator, tab: .stats) { nav in
-                StatsRouteRegistry.register(in: nav)
-            }
-        }
-        .modelContainer(Self.makeContainer())
-    }
-
-    private static func makeContainer() -> ModelContainer {
-        let schema = Schema([
-            CategoryModel.self, HabitModel.self,
-            HabitLogModel.self, HabitTemplateModel.self,
-        ])
-        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        do {
-            let container = try ModelContainer(for: schema, configurations: config)
-            DemoSeedData.populate(container.mainContext)
-            return container
-        } catch {
-            fatalError("Failed to create demo container: \(error)")
-        }
-    }
-}
-```
-
-### MCSettings/DemoApp/Sources/SettingsDemoApp.swift
-
-```swift
-import DemoShared
-import MCSettings
-import MCSettingsAPI
-import MCSyncAPI
-import MCDomain
-import MCShared
-import SwiftData
-import SwiftUI
-
-@main
-struct SettingsDemoApp: App {
-    @State private var navigator = FakeNavigator()
-
-    init() {
-        DemoDependencies.registerAll()
-        DependencyContainer.shared.register(SyncServiceAPI.self) {
-            FakeSyncService()
-        }
-    }
-
-    var body: some Scene {
-        WindowGroup {
-            DemoRootView(navigator: navigator, tab: .settings) { nav in
-                SettingsRouteRegistry.register(in: nav)
-            }
-        }
-        .modelContainer(Self.makeContainer())
-    }
-
-    private static func makeContainer() -> ModelContainer {
-        let schema = Schema([
-            CategoryModel.self, HabitModel.self,
-            HabitLogModel.self, HabitTemplateModel.self,
-        ])
-        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        do {
-            return try ModelContainer(for: schema, configurations: config)
-        } catch {
-            fatalError("Failed to create demo container: \(error)")
-        }
-    }
-}
-```
-
----
 
 ## 8. UI Tests
 
@@ -838,7 +645,7 @@ de um app host real (um `.app` bundle) pra ser lançado. O Demo App é esse host
 Unit tests rodam direto via `swift test` ou pelo scheme do package — sem problemas.
 UI tests precisam do `.xcodeproj` com um app target + UI test target.
 
-### MCHome/DemoApp/UITests/HomeUITests.swift
+### MCHome/DemoApp/HomeDemoAppUITests/
 
 ```swift
 import XCTest
@@ -903,7 +710,7 @@ final class HomeUITests: XCTestCase {
 }
 ```
 
-### MCCategories/DemoApp/UITests/CategoriesUITests.swift
+### MCCategories/DemoApp/CategoriesDemoAppUITests/
 
 ```swift
 import XCTest
@@ -966,7 +773,7 @@ Quando você dá Cmd+R no HomeDemoApp, o Xcode resolve o grafo transitivo comple
 
 **Compila:**
 - HomeDemoApp (target do app)
-- MCHome → MCHomeAPI, MCCategoriesAPI, MCDesignSystem, MCNavigationAPI, MCDomain, MCShared, MarcolasPattern
+- MCHome → MCHomeAPI, MCDesignSystem, MCNavigationAPI, MCDomain, MCShared, MCMacros (+ swift-syntax em build time)
 - DemoShared → MCNavigationAPI, MCDomain, MCShared, MCSyncAPI
 
 **Não compila:**
@@ -989,88 +796,38 @@ Se um dia incomodar, dá pra quebrar DemoShared em sub-módulos.
 3. Bundle ID: `com.marcola.HomeDemoApp`
 4. **Salve dentro de `MCHome/DemoApp/`**
 5. Delete o boilerplate gerado (ContentView.swift, App.swift, Assets, Preview Content)
-6. Arraste `MCHome/DemoApp/Sources/HomeDemoApp.swift` para o target
+6. Arraste `MCHome/DemoApp/HomeDemoApp/HomeDemoApp.swift` para o target
 7. **Project → Package Dependencies → + → Add Local:**
-   - Selecione `MCHome/` → adicione `MCHome` ao target
-   - Selecione `MCHomeAPI/` → adicione `MCHomeAPI` ao target
+   - Selecione `MCHome/` → adicione **MCHome e MCHomeAPI** ao target
+     (os dois produtos vêm do mesmo package agora)
    - Selecione `DemoShared/` → adicione `DemoShared` ao target
 8. Build Settings: DEVELOPMENT_TEAM = `SJTT4SW9L7`, SWIFT_VERSION = `5.0`
 9. **Cmd+B** — deve compilar
 10. Para UI tests: **+** na lista de targets → UI Testing Bundle
     - Target to be Tested: `HomeDemoApp`
-    - Delete boilerplate, arraste `UITests/HomeUITests.swift`
+    - Delete boilerplate, adicione `HomeDemoAppUITests.swift` e a pasta `Pages/`
 11. Commite o `.xcodeproj`
+12. Adicione o target de UI test ao `AllUITests.xctestplan`
 
-Repita para MCCategories, MCStats e MCSettings.
+Repita para MCCategories, MCStats e MCSettings. Os 4 já estão criados e commitados.
 
 ---
 
-## 11. Migração do MCFeatures atual
+## 11. Migração do MCFeatures — concluída
 
-### Mover sources
+O package monolítico `MCFeatures` foi desmembrado e deletado. Registro do que foi feito, caso
+seja útil como referência pra uma próxima quebra de módulo:
 
-```bash
-# APIs
-mkdir -p MCHomeAPI/Sources/MCHomeAPI
-mv MCFeatures/Sources/MCHomeAPI/* MCHomeAPI/Sources/MCHomeAPI/
+1. **Sources** movidos de `MCFeatures/Sources/<Target>/` pra `<Feature>/Sources/<Target>/`,
+   com API e Impl no mesmo package (`MCHome/Sources/MCHomeAPI/` + `MCHome/Sources/MCHome/`).
+2. **Package.swift** criado por feature, expondo os dois produtos (ver seção 4).
+3. **Workspace** atualizado: `MCFeatures` fora, os 4 packages de feature e `DemoShared` dentro.
+4. **xcodeproj principal**: referência ao package `MCFeatures` removida, dependências trocadas
+   pelos produtos dos novos packages.
+5. **MCFeatures/ deletado.**
 
-mkdir -p MCCategoriesAPI/Sources/MCCategoriesAPI
-mv MCFeatures/Sources/MCCategoriesAPI/* MCCategoriesAPI/Sources/MCCategoriesAPI/
-
-mkdir -p MCStatsAPI/Sources/MCStatsAPI
-mv MCFeatures/Sources/MCStatsAPI/* MCStatsAPI/Sources/MCStatsAPI/
-
-mkdir -p MCSettingsAPI/Sources/MCSettingsAPI
-mv MCFeatures/Sources/MCSettingsAPI/* MCSettingsAPI/Sources/MCSettingsAPI/
-
-# Implementações
-mkdir -p MCHome/Sources/MCHome MCHome/Tests/MCHomeTests
-mv MCFeatures/Sources/MCHome/* MCHome/Sources/MCHome/
-
-mkdir -p MCCategories/Sources/MCCategories MCCategories/Tests/MCCategoriesTests
-mv MCFeatures/Sources/MCCategories/* MCCategories/Sources/MCCategories/
-
-mkdir -p MCStats/Sources/MCStats MCStats/Tests/MCStatsTests
-mv MCFeatures/Sources/MCStats/* MCStats/Sources/MCStats/
-
-mkdir -p MCSettings/Sources/MCSettings MCSettings/Tests/MCSettingsTests
-mv MCFeatures/Sources/MCSettings/* MCSettings/Sources/MCSettings/
-```
-
-### Atualizar workspace
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<Workspace version = "1.0">
-   <FileRef location = "group:MCHomeAPI" />
-   <FileRef location = "group:MCCategoriesAPI" />
-   <FileRef location = "group:MCStatsAPI" />
-   <FileRef location = "group:MCSettingsAPI" />
-   <FileRef location = "group:MCHome" />
-   <FileRef location = "group:MCCategories" />
-   <FileRef location = "group:MCStats" />
-   <FileRef location = "group:MCSettings" />
-   <FileRef location = "group:MCInfrastructure" />
-   <FileRef location = "group:MCCore" />
-   <FileRef location = "group:MCDomain" />
-   <FileRef location = "group:MCShared" />
-   <FileRef location = "group:DemoShared" />
-   <FileRef location = "container:Marcola-Habits.xcodeproj" />
-</Workspace>
-```
-
-### Atualizar xcodeproj principal
-
-1. Remova referência ao package `MCFeatures`
-2. Adicione local packages: MCHome, MCCategories, MCStats, MCSettings,
-   MCHomeAPI, MCCategoriesAPI, MCStatsAPI, MCSettingsAPI
-3. No target Marcola-Habits, frameworks: troque os products antigos
-
-### Deletar MCFeatures
-
-```bash
-rm -rf MCFeatures/
-```
+Depois disso, os 4 packages solo de API (`MCHomeAPI/`, `MCCategoriesAPI/`, `MCStatsAPI/`,
+`MCSettingsAPI/`) também foram absorvidos como targets — ver seção 3.
 
 ---
 
@@ -1088,5 +845,17 @@ cd MCHome && swift test
 # Rodar o app completo:
 open Marcola-Habits.xcworkspace
 # Cmd+R → app inteiro
-# Cmd+U → todos os tests
+# Cmd+U → test plan ativo (AllUnitTests por padrão)
+```
+
+Pelo terminal, com os test plans:
+
+```bash
+# Todos os testes unitários (todos os packages)
+xcodebuild test -scheme Marcola-Habits -testPlan AllUnitTests \
+  -destination 'platform=iOS Simulator,name=iPhone 16'
+
+# Todos os testes de UI (os 4 Demo Apps)
+xcodebuild test -scheme Marcola-Habits -testPlan AllUITests \
+  -destination 'platform=iOS Simulator,name=iPhone 16'
 ```
