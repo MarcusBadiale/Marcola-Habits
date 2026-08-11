@@ -14,7 +14,6 @@
 		AB213CB12F920064001ED198 /* MCPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCB32F91F0000042B59E /* MCPersistence */; };
 		AB213CB22F920064001ED198 /* MCSyncAPI in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCB42F91F0000042B59E /* MCSyncAPI */; };
 		AB213CB32F920064001ED198 /* MCSync in Frameworks */ = {isa = PBXBuildFile; productRef = AB0BBCB52F91F0000042B59E /* MCSync */; };
-		AB7998C32F92989E00ABAB8B /* MarcolasPattern in Frameworks */ = {isa = PBXBuildFile; productRef = AB7998C22F92989E00ABAB8B /* MarcolasPattern */; };
 		AB7998C82F92A60300ABAB8B /* MCCategories in Frameworks */ = {isa = PBXBuildFile; productRef = AB7998C72F92A60300ABAB8B /* MCCategories */; };
 		AB7998CA2F92A60300ABAB8B /* MCHome in Frameworks */ = {isa = PBXBuildFile; productRef = AB7998C92F92A60300ABAB8B /* MCHome */; };
 		AB7998CC2F92A60300ABAB8B /* MCSettings in Frameworks */ = {isa = PBXBuildFile; productRef = AB7998CB2F92A60300ABAB8B /* MCSettings */; };
@@ -68,7 +67,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AB7998C32F92989E00ABAB8B /* MarcolasPattern in Frameworks */,
 				AB213CB12F920064001ED198 /* MCPersistence in Frameworks */,
 				AB213CB22F920064001ED198 /* MCSyncAPI in Frameworks */,
 				AB7998CA2F92A60300ABAB8B /* MCHome in Frameworks */,
@@ -149,7 +147,6 @@
 				AB0BBCB32F91F0000042B59E /* MCPersistence */,
 				AB0BBCB42F91F0000042B59E /* MCSyncAPI */,
 				AB0BBCB52F91F0000042B59E /* MCSync */,
-				AB7998C22F92989E00ABAB8B /* MarcolasPattern */,
 				AB7998C72F92A60300ABAB8B /* MCCategories */,
 				AB7998C92F92A60300ABAB8B /* MCHome */,
 				AB7998CB2F92A60300ABAB8B /* MCSettings */,
@@ -242,8 +239,10 @@
 				AB0BBCA22F91F0000042B59E /* XCLocalSwiftPackageReference "MCDomain" */,
 				AB0BBCA42F91F0000042B59E /* XCLocalSwiftPackageReference "MCCore" */,
 				AB0BBCA62F91F0000042B59E /* XCLocalSwiftPackageReference "MCInfrastructure" */,
-				AB0BBCA82F91F0000042B59E /* XCLocalSwiftPackageReference "MCFeatures" */,
-				AB7998C12F92989E00ABAB8B /* XCRemoteSwiftPackageReference "MarcolasPattern" */,
+				AB1AAA052FA91F0000000005 /* XCLocalSwiftPackageReference "MCHome" */,
+				AB1AAA062FA91F0000000006 /* XCLocalSwiftPackageReference "MCCategories" */,
+				AB1AAA072FA91F0000000007 /* XCLocalSwiftPackageReference "MCStats" */,
+				AB1AAA082FA91F0000000008 /* XCLocalSwiftPackageReference "MCSettings" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AB0BBC6D2F91DBA60042B59E;
@@ -683,21 +682,25 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = MCInfrastructure;
 		};
-		AB0BBCA82F91F0000042B59E /* XCLocalSwiftPackageReference "MCFeatures" */ = {
+		AB1AAA052FA91F0000000005 /* XCLocalSwiftPackageReference "MCHome" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = MCFeatures;
+			relativePath = MCHome;
+		};
+		AB1AAA062FA91F0000000006 /* XCLocalSwiftPackageReference "MCCategories" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = MCCategories;
+		};
+		AB1AAA072FA91F0000000007 /* XCLocalSwiftPackageReference "MCStats" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = MCStats;
+		};
+		AB1AAA082FA91F0000000008 /* XCLocalSwiftPackageReference "MCSettings" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = MCSettings;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		AB7998C12F92989E00ABAB8B /* XCRemoteSwiftPackageReference "MarcolasPattern" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/MarcusBadiale/MarcolasPattern";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -732,11 +735,6 @@
 		AB0BBCB52F91F0000042B59E /* MCSync */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MCSync;
-		};
-		AB7998C22F92989E00ABAB8B /* MarcolasPattern */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AB7998C12F92989E00ABAB8B /* XCRemoteSwiftPackageReference "MarcolasPattern" */;
-			productName = MarcolasPattern;
 		};
 		AB7998C72F92A60300ABAB8B /* MCCategories */ = {
 			isa = XCSwiftPackageProductDependency;

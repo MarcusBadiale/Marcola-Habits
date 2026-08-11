@@ -1,0 +1,45 @@
+{
+  "configurations" : [
+    {
+      "id" : "E633DBE0-2BDE-4DB4-A8B3-341A50D81D91",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:MCStats\/DemoApp\/StatsDemoApp.xcodeproj",
+        "identifier" : "AB62604F2F9AB9980034BF21",
+        "name" : "StatsDemoAppUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:MCHome\/DemoApp\/HomeDemoApp.xcodeproj",
+        "identifier" : "AB1DDE322F9AB48E009DB9DB",
+        "name" : "HomeDemoAppUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:MCSettings\/DemoApp\/SettingsDemoApp.xcodeproj",
+        "identifier" : "ABF701512F9ABA190089263D",
+        "name" : "SettingsDemoAppUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:MCCategories\/DemoApp\/CategoriesDemoApp.xcodeproj",
+        "identifier" : "ABF7010C2F9AB9410089263D",
+        "name" : "CategoriesDemoAppUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
