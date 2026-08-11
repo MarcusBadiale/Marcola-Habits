@@ -1,21 +1,18 @@
-import MarcolasPattern
 import MCDesignSystem
 import MCDomain
+import MCShared
 import SwiftData
 import SwiftUI
 
-@MCView(CategoriesProvider.self)
 struct CategoriesView: View {
-    init() {
-        self._data = .init()
-    }
+    @Provider var provider = CategoriesProvider()
 
     var body: some View {
         List {
-            ForEach(Array(data.categories.enumerated()), id: \.element.id) { index, category in
+            ForEach(Array(provider.categories.enumerated()), id: \.element.id) { index, category in
                 CategoryRow(
                     category: category,
-                    habitCount: data.habitCount(category)
+                    habitCount: provider.habitCount(for: category)
                 )
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets(
@@ -24,14 +21,14 @@ struct CategoriesView: View {
                     bottom: MCSpacing.xs,
                     trailing: MCSpacing.md
                 ))
-                .onTapGesture { data.goToDetail(category) }
+                .onTapGesture { provider.goToDetail(category) }
                 .accessibilityIdentifier("categories-row-\(index)")
             }
             .onDelete { indexSet in
                 for index in indexSet {
-                    let category = data.categories[index]
+                    let category = provider.categories[index]
                     if !category.isDefault {
-                        data.deleteCategory(category)
+                        provider.deleteCategory(category)
                     }
                 }
             }
@@ -40,7 +37,7 @@ struct CategoriesView: View {
         .navigationTitle("Categories")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button { data.showAddCategory() } label: {
+                Button { provider.showAddCategory() } label: {
                     Image(systemName: "plus")
                 }
                 .accessibilityIdentifier("categories-add-button")

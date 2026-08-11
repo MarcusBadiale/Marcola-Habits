@@ -2,18 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:MCHomeAPI">
-   </FileRef>
-   <FileRef
-      location = "group:MCCategoriesAPI">
-   </FileRef>
-   <FileRef
-      location = "group:MCStatsAPI">
-   </FileRef>
-   <FileRef
-      location = "group:MCSettingsAPI">
-   </FileRef>
-   <FileRef
       location = "group:MCHome">
    </FileRef>
    <FileRef

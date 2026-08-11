@@ -1,13 +1,13 @@
-import MarcolasPattern
 import MCCategoriesAPI
 import MCDomain
+import MCMacros
 import MCNavigationAPI
 import MCShared
 import SwiftData
 import SwiftUI
 
-@MCProvider
-struct CategoriesProvider {
+@Mockable
+struct CategoriesProvider: MCProvider {
     @Query(sort: \CategoryModel.sortOrder) var categories: [CategoryModel]
 
     @Environment(\.modelContext) var modelContext: ModelContext

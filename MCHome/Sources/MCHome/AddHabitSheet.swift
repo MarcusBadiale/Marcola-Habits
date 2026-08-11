@@ -1,17 +1,18 @@
-import MarcolasPattern
 import MCDesignSystem
 import MCDomain
+import MCShared
 import SwiftData
 import SwiftUI
 
-@MCView(AddHabitProvider.self)
 struct AddHabitSheet: View {
+    @Provider var provider = AddHabitProvider()
+
     var body: some View {
         NavigationStack {
             Form {
                 Section("Template") {
                     Button {
-                        data.$showingTemplates.wrappedValue = true
+                        provider.showingTemplates = true
                     } label: {
                         Label("Choose template", systemImage: "doc.on.doc")
                     }
@@ -19,28 +20,28 @@ struct AddHabitSheet: View {
                 }
 
                 Section("Info") {
-                    TextField("Habit name", text: data.$name)
+                    TextField("Habit name", text: provider.$name)
                         .accessibilityIdentifier("add-habit-name-field")
 
                     HStack {
                         Text("Icon")
                         Spacer()
-                        Image(systemName: data.icon)
-                            .foregroundStyle(Color(hex: data.colorHex))
+                        Image(systemName: provider.icon)
+                            .foregroundStyle(Color(hex: provider.colorHex))
                             .font(.title2)
                     }
 
-                    IconPicker(selectedIcon: data.$icon)
+                    IconPicker(selectedIcon: provider.$icon)
                 }
 
                 Section("Color") {
-                    ColorGridPicker(selectedHex: data.$colorHex)
+                    ColorGridPicker(selectedHex: provider.$colorHex)
                 }
 
                 Section("Category") {
-                    Picker("Category", selection: data.$selectedCategoryID) {
+                    Picker("Category", selection: provider.$selectedCategoryID) {
                         Text("None").tag(UUID?.none)
-                        ForEach(data.categories) { category in
+                        ForEach(provider.categories) { category in
                             Label(category.name, systemImage: category.icon)
                                 .tag(UUID?.some(category.id))
                         }
@@ -49,34 +50,34 @@ struct AddHabitSheet: View {
                 }
 
                 Section("Frequency") {
-                    Picker("Type", selection: data.$frequencyType) {
+                    Picker("Type", selection: provider.$frequencyType) {
                         Text("Daily").tag(FrequencyType.daily)
                         Text("Specific days").tag(FrequencyType.specificDays)
                         Text("Times per week").tag(FrequencyType.timesPerWeek)
                     }
                     .accessibilityIdentifier("add-habit-frequency-picker")
 
-                    if data.frequencyType == .specificDays {
-                        WeekdayPicker(selectedDays: data.$selectedDays)
+                    if provider.frequencyType == .specificDays {
+                        WeekdayPicker(selectedDays: provider.$selectedDays)
                     }
 
-                    if data.frequencyType == .timesPerWeek {
-                        Stepper("\(data.timesPerWeek)x per week", value: data.$timesPerWeek, in: 1...7)
+                    if provider.frequencyType == .timesPerWeek {
+                        Stepper("\(provider.timesPerWeek)x per week", value: provider.$timesPerWeek, in: 1...7)
                     }
                 }
 
                 Section("Goal") {
-                    Stepper("Count: \(data.targetCount)", value: data.$targetCount, in: 1...100)
+                    Stepper("Count: \(provider.targetCount)", value: provider.$targetCount, in: 1...100)
                         .accessibilityIdentifier("add-habit-target-stepper")
 
-                    if data.targetCount > 1 {
-                        TextField("Unit (e.g. cups, minutes)", text: data.$targetUnit)
+                    if provider.targetCount > 1 {
+                        TextField("Unit (e.g. cups, minutes)", text: provider.$targetUnit)
                             .accessibilityIdentifier("add-habit-unit-field")
                     }
                 }
 
                 Section("Routine") {
-                    Picker("Period", selection: data.$routine) {
+                    Picker("Period", selection: provider.$routine) {
                         Text("Any time").tag(Routine.anytime)
                         Text("Morning").tag(Routine.morning)
                         Text("Afternoon").tag(Routine.afternoon)
@@ -88,18 +89,18 @@ struct AddHabitSheet: View {
             .navigationTitle("New habit")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { data.cancel() }
+                    Button("Cancel") { provider.cancel() }
                         .accessibilityIdentifier("add-habit-cancel-button")
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") { data.save() }
-                        .disabled(!data.canSave)
+                    Button("Save") { provider.save() }
+                        .disabled(!provider.canSave)
                         .accessibilityIdentifier("add-habit-save-button")
                 }
             }
-            .sheet(isPresented: data.$showingTemplates) {
-                TemplatePicker(templates: data.templates) { template in
-                    data.applyTemplate(template)
+            .sheet(isPresented: provider.$showingTemplates) {
+                TemplatePicker(templates: provider.templates) { template in
+                    provider.applyTemplate(template)
                 }
             }
         }

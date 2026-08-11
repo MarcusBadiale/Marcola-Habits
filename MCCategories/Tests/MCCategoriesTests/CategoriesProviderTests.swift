@@ -8,9 +8,10 @@ import SwiftData
 @Suite("CategoriesProvider")
 struct CategoriesProviderTests {
 
-    // MARK: - Habit count
+    // MARK: - Habit count (requires iOS Simulator for SwiftData relationships)
 
-    @Test @MainActor
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"] != nil))
+    @MainActor
     func habitCountReturnsNonArchivedHabits() throws {
         let context = try TestHelpers.makeContext()
         let category = CategoryModel(name: "Health", icon: "heart", colorHex: "#F00", sortOrder: 0)
@@ -66,9 +67,10 @@ struct CategoriesProviderTests {
         #expect(spy.presentCalls.first?.route == CategoriesRoutes.editCategory)
     }
 
-    // MARK: - Delete
+    // MARK: - Delete (requires iOS Simulator for SwiftData delete)
 
-    @Test @MainActor
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"] != nil))
+    @MainActor
     func deleteCategoryRemovesFromContext() throws {
         let context = try TestHelpers.makeContext()
         let category = CategoryModel(name: "Health", icon: "heart", colorHex: "#F00", sortOrder: 0)

@@ -13,9 +13,8 @@ struct EditCategoryProviderTests {
     func canSaveIsFalseWhenNameEmpty() throws {
         let context = try TestHelpers.makeContext()
         var sut = EditCategoryProvider.Mock(
-            allCategories: [],
-            modelContext: context, navigator: SpyNavigator(),
-            editingCategoryID: nil
+            editingCategoryID: nil, allCategories: [],
+            modelContext: context, navigator: SpyNavigator()
         )
         #expect(sut.canSave == false)
     }
@@ -24,9 +23,8 @@ struct EditCategoryProviderTests {
     func canSaveIsTrueWhenNameHasContent() throws {
         let context = try TestHelpers.makeContext()
         var sut = EditCategoryProvider.Mock(
-            allCategories: [],
-            modelContext: context, navigator: SpyNavigator(),
-            editingCategoryID: nil
+            editingCategoryID: nil, allCategories: [],
+            modelContext: context, navigator: SpyNavigator()
         )
         sut.name = "Fitness"
         #expect(sut.canSave == true)
@@ -38,9 +36,8 @@ struct EditCategoryProviderTests {
     func isEditingReturnsFalseWhenNoID() throws {
         let context = try TestHelpers.makeContext()
         var sut = EditCategoryProvider.Mock(
-            allCategories: [],
-            modelContext: context, navigator: SpyNavigator(),
-            editingCategoryID: nil
+            editingCategoryID: nil, allCategories: [],
+            modelContext: context, navigator: SpyNavigator()
         )
         #expect(sut.isEditing == false)
     }
@@ -49,9 +46,8 @@ struct EditCategoryProviderTests {
     func isEditingReturnsTrueWhenIDPresent() throws {
         let context = try TestHelpers.makeContext()
         var sut = EditCategoryProvider.Mock(
-            allCategories: [],
-            modelContext: context, navigator: SpyNavigator(),
-            editingCategoryID: UUID()
+            editingCategoryID: UUID(), allCategories: [],
+            modelContext: context, navigator: SpyNavigator()
         )
         #expect(sut.isEditing == true)
     }
@@ -63,9 +59,8 @@ struct EditCategoryProviderTests {
         let context = try TestHelpers.makeContext()
         let category = CategoryModel(name: "Health", icon: "heart.fill", colorHex: "#EF4444", sortOrder: 0)
         var sut = EditCategoryProvider.Mock(
-            allCategories: [category],
-            modelContext: context, navigator: SpyNavigator(),
-            editingCategoryID: category.id
+            editingCategoryID: category.id, allCategories: [category],
+            modelContext: context, navigator: SpyNavigator()
         )
         sut.loadExisting()
         #expect(sut.name == "Health")
@@ -79,9 +74,8 @@ struct EditCategoryProviderTests {
         let context = try TestHelpers.makeContext()
         let category = CategoryModel(name: "Health", icon: "heart.fill", colorHex: "#EF4444", sortOrder: 0)
         var sut = EditCategoryProvider.Mock(
-            allCategories: [category],
-            modelContext: context, navigator: SpyNavigator(),
-            editingCategoryID: category.id
+            editingCategoryID: category.id, allCategories: [category],
+            modelContext: context, navigator: SpyNavigator()
         )
         sut.loadExisting()
         sut.name = "Changed"
@@ -89,16 +83,16 @@ struct EditCategoryProviderTests {
         #expect(sut.name == "Changed")
     }
 
-    // MARK: - Save new
+    // MARK: - Save new (requires iOS Simulator for SwiftData insert)
 
-    @Test @MainActor
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"] != nil))
+    @MainActor
     func saveCreatesNewCategoryAndDismisses() throws {
         let context = try TestHelpers.makeContext()
         let spy = SpyNavigator()
         var sut = EditCategoryProvider.Mock(
-            allCategories: [],
+            editingCategoryID: nil, allCategories: [],
             modelContext: context, navigator: spy,
-            editingCategoryID: nil,
             name: "New Category", icon: "star.fill", colorHex: "#3B82F6"
         )
         sut.save()
@@ -109,14 +103,14 @@ struct EditCategoryProviderTests {
         #expect(spy.dismissCount == 1)
     }
 
-    @Test @MainActor
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"] != nil))
+    @MainActor
     func saveSetsCorrectSortOrder() throws {
         let context = try TestHelpers.makeContext()
         let existing = CategoryModel(name: "First", icon: "1.circle", colorHex: "#000", sortOrder: 2)
         var sut = EditCategoryProvider.Mock(
-            allCategories: [existing],
+            editingCategoryID: nil, allCategories: [existing],
             modelContext: context, navigator: SpyNavigator(),
-            editingCategoryID: nil,
             name: "Second"
         )
         sut.save()
@@ -125,18 +119,18 @@ struct EditCategoryProviderTests {
         #expect(newCat?.sortOrder == 3)
     }
 
-    // MARK: - Save existing
+    // MARK: - Save existing (requires iOS Simulator for SwiftData update)
 
-    @Test @MainActor
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"] != nil))
+    @MainActor
     func saveUpdatesExistingCategory() throws {
         let context = try TestHelpers.makeContext()
         let category = CategoryModel(name: "Old", icon: "folder", colorHex: "#000", sortOrder: 0)
         context.insert(category)
         let spy = SpyNavigator()
         var sut = EditCategoryProvider.Mock(
-            allCategories: [category],
+            editingCategoryID: category.id, allCategories: [category],
             modelContext: context, navigator: spy,
-            editingCategoryID: category.id,
             name: "Updated", icon: "star.fill", colorHex: "#F00"
         )
         sut.save()
@@ -153,9 +147,8 @@ struct EditCategoryProviderTests {
         let context = try TestHelpers.makeContext()
         let spy = SpyNavigator()
         var sut = EditCategoryProvider.Mock(
-            allCategories: [],
-            modelContext: context, navigator: spy,
-            editingCategoryID: nil
+            editingCategoryID: nil, allCategories: [],
+            modelContext: context, navigator: spy
         )
         sut.cancel()
         #expect(spy.dismissCount == 1)

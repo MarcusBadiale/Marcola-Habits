@@ -103,9 +103,10 @@ struct AddHabitProviderTests {
         #expect(sut.selectedCategoryID == category.id)
     }
 
-    // MARK: - Save
+    // MARK: - Save (requires iOS Simulator for SwiftData insert)
 
-    @Test @MainActor
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"] != nil))
+    @MainActor
     func saveInsertsHabitAndDismisses() throws {
         let context = try TestHelpers.makeContext()
         let spy = SpyNavigator()

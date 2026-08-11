@@ -1,50 +1,51 @@
-import MarcolasPattern
 import MCDesignSystem
 import MCDomain
+import MCShared
 import SwiftData
 import SwiftUI
 
-@MCView(EditCategoryProvider.self)
 struct EditCategorySheet: View {
+    @Provider var provider: EditCategoryProvider
+
     init(editingCategoryID: UUID?) {
-        self._data = .init(editingCategoryID: editingCategoryID)
+        self._provider = Provider(EditCategoryProvider(editingCategoryID: editingCategoryID))
     }
 
     var body: some View {
         NavigationStack {
             Form {
                 Section("Info") {
-                    TextField("Category name", text: data.$name)
+                    TextField("Category name", text: provider.$name)
                         .accessibilityIdentifier("edit-category-name-field")
 
                     HStack {
                         Text("Icon")
                         Spacer()
-                        Image(systemName: data.icon)
-                            .foregroundStyle(Color(hex: data.colorHex))
+                        Image(systemName: provider.icon)
+                            .foregroundStyle(Color(hex: provider.colorHex))
                             .font(.title2)
                     }
 
-                    IconPicker(selectedIcon: data.$icon)
+                    IconPicker(selectedIcon: provider.$icon)
                 }
 
                 Section("Color") {
-                    ColorGridPicker(selectedHex: data.$colorHex)
+                    ColorGridPicker(selectedHex: provider.$colorHex)
                 }
             }
-            .navigationTitle(data.isEditing ? "Edit category" : "New category")
+            .navigationTitle(provider.isEditing ? "Edit category" : "New category")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { data.cancel() }
+                    Button("Cancel") { provider.cancel() }
                         .accessibilityIdentifier("edit-category-cancel-button")
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") { data.save() }
-                        .disabled(!data.canSave)
+                    Button("Save") { provider.save() }
+                        .disabled(!provider.canSave)
                         .accessibilityIdentifier("edit-category-save-button")
                 }
             }
-            .onAppear { data.loadExisting() }
+            .onAppear { provider.loadExisting() }
         }
     }
 }

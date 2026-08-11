@@ -1,12 +1,12 @@
-import MarcolasPattern
 import MCDomain
+import MCMacros
 import MCNavigationAPI
 import MCShared
 import SwiftData
 import SwiftUI
 
-@MCProvider
-struct EditCategoryProvider {
+@Mockable
+struct EditCategoryProvider: MCProvider {
     let editingCategoryID: UUID?
 
     @Query var allCategories: [CategoryModel]
@@ -18,6 +18,10 @@ struct EditCategoryProvider {
 
     @Environment(\.modelContext) var modelContext: ModelContext
     @Environment(\.navigator) var navigator: NavigatorAPI
+
+    init(editingCategoryID: UUID?) {
+        self.editingCategoryID = editingCategoryID
+    }
 
     var isEditing: Bool { editingCategoryID != nil }
 

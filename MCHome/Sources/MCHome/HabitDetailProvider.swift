@@ -1,12 +1,12 @@
-import MarcolasPattern
 import MCDomain
+import MCMacros
 import MCNavigationAPI
 import MCShared
 import SwiftData
 import SwiftUI
 
-@MCProvider
-struct HabitDetailProvider {
+@Mockable
+struct HabitDetailProvider: MCProvider {
     let habitID: UUID
 
     @Query var allHabits: [HabitModel]
@@ -14,6 +14,10 @@ struct HabitDetailProvider {
 
     @Environment(\.modelContext) var modelContext: ModelContext
     @Environment(\.navigator) var navigator: NavigatorAPI
+
+    init(habitID: UUID) {
+        self.habitID = habitID
+    }
 
     var habit: HabitModel? {
         allHabits.first { $0.id == habitID }

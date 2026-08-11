@@ -1,14 +1,14 @@
-import MarcolasPattern
 import MCCategoriesAPI
 import MCDomain
 import MCHomeAPI
+import MCMacros
 import MCNavigationAPI
 import MCShared
 import SwiftData
 import SwiftUI
 
-@MCProvider
-struct CategoryDetailProvider {
+@Mockable
+struct CategoryDetailProvider: MCProvider {
     let categoryID: UUID
 
     @Query var allCategories: [CategoryModel]
@@ -16,6 +16,10 @@ struct CategoryDetailProvider {
 
     @Environment(\.modelContext) var modelContext: ModelContext
     @Environment(\.navigator) var navigator: NavigatorAPI
+
+    init(categoryID: UUID) {
+        self.categoryID = categoryID
+    }
 
     var category: CategoryModel? {
         allCategories.first { $0.id == categoryID }

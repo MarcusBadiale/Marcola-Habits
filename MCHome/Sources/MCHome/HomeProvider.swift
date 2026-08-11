@@ -1,13 +1,13 @@
-import MarcolasPattern
 import MCDomain
 import MCHomeAPI
+import MCMacros
 import MCNavigationAPI
 import MCShared
 import SwiftData
 import SwiftUI
 
-@MCProvider
-struct HomeProvider {
+@Mockable
+struct HomeProvider: MCProvider {
     @Query(filter: #Predicate<HabitModel> { !$0.isArchived }, sort: \HabitModel.name)
     var habits: [HabitModel]
 

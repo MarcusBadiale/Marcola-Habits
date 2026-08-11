@@ -189,9 +189,10 @@ struct HomeProviderTests {
         #expect(spy.presentCalls.first?.route == HomeRoutes.addHabit)
     }
 
-    // MARK: - Toggle completion
+    // MARK: - Toggle completion (requires iOS Simulator for SwiftData insert)
 
-    @Test @MainActor
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"] != nil))
+    @MainActor
     func toggleCompletionCreatesLogWhenNoneExists() throws {
         let context = try TestHelpers.makeContext()
         let habit = HabitModel(

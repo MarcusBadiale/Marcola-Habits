@@ -9,10 +9,6 @@ import SwiftUI
 struct HomeDemoApp: App {
     @State private var navigator = FakeNavigator()
 
-    init() {
-        DemoDependencies.registerAll()
-    }
-
     var body: some Scene {
         WindowGroup {
             DemoRootView(navigator: navigator, tab: .today) { nav in

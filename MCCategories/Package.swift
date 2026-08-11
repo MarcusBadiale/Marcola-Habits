@@ -5,24 +5,24 @@ let package = Package(
     name: "MCCategories",
     platforms: [.iOS(.v18), .macOS(.v15)],
     products: [
+        .library(name: "MCCategoriesAPI", targets: ["MCCategoriesAPI"]),
         .library(name: "MCCategories", targets: ["MCCategories"]),
     ],
     dependencies: [
-        .package(path: "../MCCategoriesAPI"),
-        .package(path: "../MCHomeAPI"),
+        .package(path: "../MCHome"),
         .package(path: "../MCCore"),
         .package(path: "../MCDomain"),
         .package(path: "../MCShared"),
-        .package(url: "https://github.com/MarcusBadiale/MarcolasPattern.git", exact: "1.2.3"),
     ],
     targets: [
+        .target(name: "MCCategoriesAPI"),
         .target(
             name: "MCCategories",
             dependencies: [
-                .product(name: "MCCategoriesAPI", package: "MCCategoriesAPI"),
-                .product(name: "MCHomeAPI", package: "MCHomeAPI"),
-                .product(name: "MarcolasPattern", package: "MarcolasPattern"),
+                "MCCategoriesAPI",
+                .product(name: "MCHomeAPI", package: "MCHome"),
                 .product(name: "MCShared", package: "MCShared"),
+                .product(name: "MCMacros", package: "MCShared"),
                 .product(name: "MCDomain", package: "MCDomain"),
                 .product(name: "MCDesignSystem", package: "MCCore"),
                 .product(name: "MCNavigationAPI", package: "MCCore"),

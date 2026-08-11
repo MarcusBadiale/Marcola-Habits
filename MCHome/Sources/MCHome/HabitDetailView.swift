@@ -1,17 +1,18 @@
-import MarcolasPattern
 import MCDesignSystem
 import MCDomain
+import MCShared
 import SwiftData
 import SwiftUI
 
-@MCView(HabitDetailProvider.self)
 struct HabitDetailView: View {
+    @Provider var provider: HabitDetailProvider
+
     init(habitID: UUID) {
-        self._data = .init(habitID: habitID)
+        self._provider = Provider(HabitDetailProvider(habitID: habitID))
     }
 
     var body: some View {
-        if let habit = data.habit {
+        if let habit = provider.habit {
             List {
                 Section {
                     HStack(spacing: MCSpacing.md) {
@@ -23,14 +24,14 @@ struct HabitDetailView: View {
                             Text(habit.name)
                                 .font(MCTypography.title)
 
-                            Text(data.frequencyDescription)
+                            Text(provider.frequencyDescription)
                                 .font(MCTypography.callout)
                                 .foregroundStyle(.secondary)
                         }
 
                         Spacer()
 
-                        StreakBadge(count: data.currentStreak)
+                        StreakBadge(count: provider.currentStreak)
                     }
                     .padding(.vertical, MCSpacing.sm)
                 }
@@ -56,11 +57,11 @@ struct HabitDetailView: View {
                 }
 
                 Section("Recent logs") {
-                    if data.recentLogs.isEmpty {
+                    if provider.recentLogs.isEmpty {
                         Text("No records yet")
                             .foregroundStyle(.secondary)
                     } else {
-                        ForEach(data.recentLogs) { log in
+                        ForEach(provider.recentLogs) { log in
                             HStack {
                                 Text(log.date.shortMonthDay)
                                 Spacer()
@@ -77,7 +78,7 @@ struct HabitDetailView: View {
 
                 Section {
                     Button(role: .destructive) {
-                        data.archiveHabit()
+                        provider.archiveHabit()
                     } label: {
                         Label("Archive habit", systemImage: "archivebox")
                     }

@@ -1,17 +1,18 @@
-import MarcolasPattern
 import MCDesignSystem
 import MCDomain
+import MCShared
 import SwiftData
 import SwiftUI
 
-@MCView(CategoryDetailProvider.self)
 struct CategoryDetailView: View {
+    @Provider var provider: CategoryDetailProvider
+
     init(categoryID: UUID) {
-        self._data = .init(categoryID: categoryID)
+        self._provider = Provider(CategoryDetailProvider(categoryID: categoryID))
     }
 
     var body: some View {
-        if let category = data.category {
+        if let category = provider.category {
             List {
                 Section {
                     HStack(spacing: MCSpacing.md) {
@@ -23,7 +24,7 @@ struct CategoryDetailView: View {
                             Text(category.name)
                                 .font(MCTypography.title)
 
-                            Text("\(data.activeHabits.count) active habit\(data.activeHabits.count == 1 ? "" : "s")")
+                            Text("\(provider.activeHabits.count) active habit\(provider.activeHabits.count == 1 ? "" : "s")")
                                 .font(MCTypography.callout)
                                 .foregroundStyle(.secondary)
                         }
@@ -32,11 +33,11 @@ struct CategoryDetailView: View {
                 }
 
                 Section("Habits") {
-                    if data.activeHabits.isEmpty {
+                    if provider.activeHabits.isEmpty {
                         Text("No habits in this category")
                             .foregroundStyle(.secondary)
                     } else {
-                        ForEach(Array(data.activeHabits.enumerated()), id: \.element.id) { index, habit in
+                        ForEach(Array(provider.activeHabits.enumerated()), id: \.element.id) { index, habit in
                             HStack(spacing: MCSpacing.md) {
                                 Image(systemName: habit.icon)
                                     .foregroundStyle(Color(hex: habit.colorHex))
@@ -46,10 +47,10 @@ struct CategoryDetailView: View {
 
                                 Spacer()
 
-                                Image(systemName: data.isCompleted(habit) ? "checkmark.circle.fill" : "circle")
-                                    .foregroundStyle(data.isCompleted(habit) ? Color(hex: habit.colorHex) : .secondary)
+                                Image(systemName: provider.isCompleted(habit) ? "checkmark.circle.fill" : "circle")
+                                    .foregroundStyle(provider.isCompleted(habit) ? Color(hex: habit.colorHex) : .secondary)
                             }
-                            .onTapGesture { data.goToHabitDetail(habit) }
+                            .onTapGesture { provider.goToHabitDetail(habit) }
                             .accessibilityIdentifier("category-detail-habit-\(index)")
                         }
                     }
@@ -58,7 +59,7 @@ struct CategoryDetailView: View {
             .navigationTitle(category.name)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button { data.showEditCategory() } label: {
+                    Button { provider.showEditCategory() } label: {
                         Text("Edit")
                     }
                     .accessibilityIdentifier("category-detail-edit-button")

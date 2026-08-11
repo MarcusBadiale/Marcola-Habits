@@ -1,12 +1,12 @@
-import MarcolasPattern
 import MCDomain
+import MCMacros
 import MCNavigationAPI
 import MCShared
 import SwiftData
 import SwiftUI
 
-@MCProvider
-struct AddHabitProvider {
+@Mockable
+struct AddHabitProvider: MCProvider {
     @Query(sort: \CategoryModel.sortOrder) var categories: [CategoryModel]
     @Query var templates: [HabitTemplateModel]
 

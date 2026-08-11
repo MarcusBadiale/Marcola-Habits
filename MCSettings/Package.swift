@@ -5,22 +5,21 @@ let package = Package(
     name: "MCSettings",
     platforms: [.iOS(.v18), .macOS(.v15)],
     products: [
+        .library(name: "MCSettingsAPI", targets: ["MCSettingsAPI"]),
         .library(name: "MCSettings", targets: ["MCSettings"]),
     ],
     dependencies: [
-        .package(path: "../MCSettingsAPI"),
         .package(path: "../MCCore"),
         .package(path: "../MCDomain"),
         .package(path: "../MCShared"),
         .package(path: "../MCInfrastructure"),
-        .package(url: "https://github.com/MarcusBadiale/MarcolasPattern.git", exact: "1.2.3"),
     ],
     targets: [
+        .target(name: "MCSettingsAPI"),
         .target(
             name: "MCSettings",
             dependencies: [
-                .product(name: "MCSettingsAPI", package: "MCSettingsAPI"),
-                .product(name: "MarcolasPattern", package: "MarcolasPattern"),
+                "MCSettingsAPI",
                 .product(name: "MCShared", package: "MCShared"),
                 .product(name: "MCDomain", package: "MCDomain"),
                 .product(name: "MCSyncAPI", package: "MCInfrastructure"),
