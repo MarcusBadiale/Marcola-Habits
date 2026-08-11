@@ -22,6 +22,7 @@ struct HomeProvider: MCProvider {
 
     @Environment(\.modelContext) var modelContext: ModelContext
     @Environment(\.navigator) var navigator: NavigatorAPI
+    @Environment(\.statsCalculator) var stats: StatsCalculatorAPI
 
     var filteredHabits: [HabitModel] {
         let scheduled = habits.filter { $0.isScheduled(for: selectedDate) }
@@ -45,17 +46,10 @@ struct HomeProvider: MCProvider {
     }
 
     func streak(_ habit: HabitModel) -> Int {
-        var count = 0
-        var date = Date.now.startOfDay
-        let habitLogs = allLogs.filter { $0.habit?.id == habit.id }
-        while true {
-            let dayLogs = habitLogs.first { $0.date.isInSameDay(date) }
-            guard let log = dayLogs, log.completed || log.count >= habit.targetCount else { break }
-            count += 1
-            guard let prev = Calendar.current.date(byAdding: .day, value: -1, to: date) else { break }
-            date = prev
-        }
-        return count
+        stats.currentStreak(
+            habitID: habit.id,
+            logs: allLogs.filter { $0.habit?.id == habit.id }.map { $0.toDTO() }
+        )
     }
 
     func toggleCompletion(_ habit: HabitModel) {

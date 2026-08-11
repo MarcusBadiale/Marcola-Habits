@@ -14,6 +14,7 @@ struct HabitDetailProvider: MCProvider {
 
     @Environment(\.modelContext) var modelContext: ModelContext
     @Environment(\.navigator) var navigator: NavigatorAPI
+    @Environment(\.statsCalculator) var stats: StatsCalculatorAPI
 
     init(habitID: UUID) {
         self.habitID = habitID
@@ -34,17 +35,10 @@ struct HabitDetailProvider: MCProvider {
 
     var currentStreak: Int {
         guard let habit else { return 0 }
-        var count = 0
-        var date = Date.now.startOfDay
-        let habitLogs = allLogs.filter { $0.habit?.id == habit.id }
-        while true {
-            let log = habitLogs.first { $0.date.isInSameDay(date) }
-            guard let log, log.completed || log.count >= habit.targetCount else { break }
-            count += 1
-            guard let prev = Calendar.current.date(byAdding: .day, value: -1, to: date) else { break }
-            date = prev
-        }
-        return count
+        return stats.currentStreak(
+            habitID: habit.id,
+            logs: allLogs.filter { $0.habit?.id == habit.id }.map { $0.toDTO() }
+        )
     }
 
     var frequencyDescription: String {

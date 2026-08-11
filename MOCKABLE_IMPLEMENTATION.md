@@ -1,5 +1,9 @@
 # Implementação: @Mockable Macro
 
+> **Status:** implementado e integrado. Os targets `MCMacros` e `MCMacrosPlugin` vivem dentro
+> do package **MCShared** (não num package `MCMacros` solo, como este doc previa). As seções
+> de código abaixo refletem a implementação; a de integração foi corrigida no final.
+
 ## O que faz
 
 O `@Mockable` gera um `Mock` struct dentro do tipo anotado. O Mock espelha todas as
@@ -13,7 +17,8 @@ precisar do runtime do SwiftUI.
 |---|---|
 | `@State var x: T = default` | `var x: T` (mantém default no init) |
 | `@Query var x: [T]` | `var x: [T]` (required no init) |
-| `@Environment(...) var x` | **excluído** (não faz sentido no Mock) |
+| `@Environment(\.key) var x: T` | `var x: T` (required no init — é assim que injeta spy/mock) |
+| `@Environment(\.key) var x` (sem tipo) | **excluído**, e funções que referenciam `x` também |
 | `@Bindable var x: T` | `var x: T` (required no init) |
 | `let x: T` | `var x: T` (required no init) |
 | `let x: T = Foo()` | `var x: T` (required no init — dependência) |
@@ -23,28 +28,42 @@ precisar do runtime do SwiftUI.
 | `var computed: T { ... }` | copiado como está |
 | `func doSomething()` | `mutating func doSomething()` |
 
-**Init gerado:** required params primeiro (dependências, `@Query`, `@Bindable`),
-optional params depois (`@State` com defaults).
+**Init gerado:** required params primeiro (dependências, `@Query`, `@Bindable`,
+`@Environment` com tipo), optional params depois (`@State` com defaults).
+
+⚠️ A anotação de tipo no `@Environment` é o que decide se a propriedade entra no Mock. Sem
+tipo, ela sai — e, com ela, **toda função que a referencia**. Um provider que escreve
+`@Environment(\.navigator) var navigator` (sem `: NavigatorAPI`) gera um Mock sem `navigator`
+e sem nenhuma função de navegação, silenciosamente. Sempre anotar o tipo em provider
+`@Mockable`.
 
 ---
 
 ## Estrutura do package
 
+Como ficou de fato — dentro do MCShared:
+
 ```
-MCMacros/
-├── Package.swift
+MCShared/
+├── Package.swift                     ← expõe MCShared e MCMacros; dep: swift-syntax
 ├── Sources/
+│   ├── MCShared/
+│   │   └── Architecture/MCProvider.swift
 │   ├── MCMacros/
-│   │   └── Mockable.swift
+│   │   └── Mockable.swift            ← declaração @attached(member, names: named(Mock))
 │   └── MCMacrosPlugin/
 │       ├── MockableMacro.swift
 │       ├── PropertyClassifier.swift
 │       └── Plugin.swift
 └── Tests/
+    ├── MCSharedTests/
     └── MCMacrosTests/
         ├── MockableTests.swift
         └── TestHelpers.swift
 ```
+
+O `Package.swift` abaixo é o do desenho original (package solo). O real é o do MCShared, com
+os mesmos targets `MCMacros`/`MCMacrosPlugin` mais o `MCShared`.
 
 ---
 
@@ -1120,34 +1139,39 @@ final class MockableTests: XCTestCase {
 ## Como rodar os testes
 
 ```bash
-cd MCMacros
-swift test
+cd MCShared && swift test
 ```
+
+Ou pelo Xcode: scheme `MCShared` (inclui `MCMacrosTests`), ou o test plan `AllUnitTests`.
 
 ---
 
 ## Como integrar no projeto
 
-### 1. Adicionar ao MCFeatures/Package.swift
+### 1. Adicionar o produto MCMacros ao target da feature
+
+`MCMacros` vem do package **MCShared** — não há package `MCMacros` separado:
 
 ```swift
-// Em dependencies:
-.package(path: "../MCMacros"),
-
-// Em cada target que usar @Mockable:
-.product(name: "MCMacros", package: "MCMacros"),
+// <Feature>/Package.swift, no target Impl:
+.product(name: "MCMacros", package: "MCShared"),
 ```
+
+Já está feito em MCHome e MCCategories. MCStats e MCSettings ainda não usam (sem providers).
 
 ### 2. Usar no Provider
 
 ```swift
 import MCMacros
+import MCNavigationAPI
+import MCShared
 
 @Mockable
 struct HomeProvider: MCProvider {
     @Query var habits: [HabitModel]
     @State var selectedDate: Date = Date.now.startOfDay
-    @Environment(\.navigator) var navigator
+    @Environment(\.modelContext) var modelContext: ModelContext
+    @Environment(\.navigator) var navigator: NavigatorAPI    // tipo anotado — obrigatório
 
     var filteredHabits: [HabitModel] {
         habits.filter { $0.isScheduled(for: selectedDate) }
@@ -1157,62 +1181,54 @@ struct HomeProvider: MCProvider {
 }
 ```
 
-### 3. Testar
+### 3. Testar — Swift Testing, não XCTest
+
+Os testes de provider usam Swift Testing (`@Suite`/`@Test`/`#expect`). XCTest só em
+`MCMacrosTests`, porque `assertMacroExpansion` é XCTest-only.
 
 ```swift
-import XCTest
+import Foundation
+import Testing
+import MCDomain
+import MCHomeAPI
+import SwiftData
 @testable import MCHome
 
-final class HomeProviderTests: XCTestCase {
+@Suite("HomeProvider")
+struct HomeProviderTests {
 
-    func testFilteredHabitsExcludesUnscheduled() {
-        let monday = makeDate(weekday: .monday)
-        let weekendOnly = HabitModel(
-            name: "Weekend run",
-            icon: "figure.run",
-            frequency: .specificDays([.saturday, .sunday])
-        )
+    @Test @MainActor
+    func filteredHabitsExcluiNaoAgendados() throws {
+        let context = try TestHelpers.makeContext()
         let daily = HabitModel(
-            name: "Meditate",
-            icon: "brain.head.profile",
-            frequency: .daily
+            name: "Meditate", icon: "brain.head.profile", colorHex: "#000",
+            frequency: .daily, targetCount: 1, targetUnit: "", routine: .anytime
         )
 
         var sut = HomeProvider.Mock(
-            habits: [weekendOnly, daily],
-            categories: [],
-            allLogs: [],
-            selectedDate: monday
+            habits: [daily], categories: [], allLogs: [],
+            modelContext: context, navigator: SpyNavigator(),
+            selectedDate: Date.now.startOfDay
         )
 
-        XCTAssertEqual(sut.filteredHabits.count, 1)
-        XCTAssertEqual(sut.filteredHabits[0].name, "Meditate")
-    }
-
-    func testToggleCompletionMarksAsComplete() {
-        let habit = HabitModel(name: "Read", icon: "book.fill")
-        var sut = HomeProvider.Mock(
-            habits: [habit],
-            categories: [],
-            allLogs: []
-        )
-
-        sut.toggleCompletion(habit)
-
-        // Verifica que a lógica de toggle funcionou
+        #expect(sut.filteredHabits.count == 1)
     }
 }
 ```
+
+`var sut` porque funções que mudam `@State` viram `mutating`. `@MainActor` porque
+`TestHelpers.makeContext()` é `@MainActor`. `SpyNavigator` fica em
+`Tests/<Feature>Tests/Helpers/`, uma cópia por package.
 
 ---
 
 ## Prioridade de aplicação
 
-| Provider | Lógica testável | Prioridade |
-|---|---|---|
-| `HomeProvider` | filtering, toggle, progress, streak | **Alta** |
-| `HabitDetailProvider` | streak, frequency description | **Alta** |
-| `CategoryDetailProvider` | isCompleted, activeHabits | Média |
-| `EditCategoryProvider` | canSave, loadExisting, save | Média |
-| `AddHabitProvider` | canSave, applyTemplate, frequency | Média |
-| `CategoriesProvider` | habitCount, delegação simples | Baixa |
+| Provider | Lógica testável | Prioridade | Status |
+|---|---|---|---|
+| `HomeProvider` | filtering, toggle, progress, streak | **Alta** | ✅ 11 testes |
+| `HabitDetailProvider` | streak, frequency description | **Alta** | ⬜ pendente |
+| `CategoryDetailProvider` | isCompleted, activeHabits | Média | ⬜ pendente |
+| `EditCategoryProvider` | canSave, loadExisting, save | Média | ✅ 10 testes |
+| `AddHabitProvider` | canSave, applyTemplate, frequency | Média | ✅ 9 testes |
+| `CategoriesProvider` | habitCount, delegação simples | Baixa | ✅ 4 testes |
