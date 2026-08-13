@@ -67,7 +67,7 @@ private struct IconPicker: View {
                     .font(.title3)
                     .frame(width: 36, height: 36)
                     .background(
-                        selectedIcon == icon ? MCColors.accent.opacity(0.2) : Color.clear,
+                        selectedIcon == icon ? Color.accentColor.opacity(0.2) : Color.clear,
                         in: Circle()
                     )
                     .onTapGesture { selectedIcon = icon }

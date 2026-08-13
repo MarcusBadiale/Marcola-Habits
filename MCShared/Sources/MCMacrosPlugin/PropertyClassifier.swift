@@ -3,7 +3,7 @@ import SwiftSyntax
 // MARK: - Property Kind
 
 enum MockPropertyKind {
-    case state       // @State → var with default in Mock init
+    case state       // @State / @AppStorage → var with default in Mock init
     case query       // @Query → var, required in Mock init
     case environment // @Environment → excluded from Mock
     case bindable    // @Bindable → var, required in Mock init
@@ -32,7 +32,9 @@ struct MockFunction {
 
 enum MockClassifier {
 
-    private static let knownWrappers: Set<String> = ["State", "Query", "Environment", "Bindable"]
+    private static let knownWrappers: Set<String> = [
+        "State", "AppStorage", "Query", "Environment", "Bindable",
+    ]
 
     static func classifyProperty(member: MemberBlockItemSyntax) -> MockProperty? {
         guard let varDecl = member.decl.as(VariableDeclSyntax.self),
@@ -109,7 +111,10 @@ enum MockClassifier {
 
         // Classify by wrapper
         switch wrapperName {
-        case "State":
+        // @AppStorage é estado local com default, igual a @State — a diferença (persistir no
+        // UserDefaults) não existe no Mock, que é lógica pura. Sem isto ele cairia em `.regular`,
+        // virando parâmetro obrigatório com o default descartado.
+        case "State", "AppStorage":
             return MockProperty(kind: .state, name: name, type: type, defaultValue: defaultValue, originalSource: varDecl.trimmedDescription)
         case "Query":
             return MockProperty(kind: .query, name: name, type: type, defaultValue: nil, originalSource: varDecl.trimmedDescription)

@@ -5,7 +5,7 @@ public struct ProgressRing: View {
     public var lineWidth: CGFloat
     public var color: Color
 
-    public init(progress: Double, lineWidth: CGFloat = 4, color: Color = MCColors.accent) {
+    public init(progress: Double, lineWidth: CGFloat = 4, color: Color = Color.accentColor) {
         self.progress = progress
         self.lineWidth = lineWidth
         self.color = color
