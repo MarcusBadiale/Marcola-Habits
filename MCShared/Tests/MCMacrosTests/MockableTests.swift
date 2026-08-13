@@ -44,6 +44,81 @@ final class MockableTests: XCTestCase {
         #endif
     }
 
+    // MARK: - @AppStorage properties
+
+    /// @AppStorage é tratado como @State: estado local com default. A persistência no UserDefaults
+    /// não existe no Mock, que é lógica pura. Sem isso ele cairia em `.regular` — parâmetro
+    /// obrigatório com o default descartado.
+    func testAppStoragePropertiesBehaveLikeState() throws {
+        #if canImport(MCMacrosPlugin)
+        assertMacroExpansion(
+            """
+            @Mockable
+            struct AppearanceProvider {
+                @AppStorage("mcSettingsTheme") var themeRawValue: String = "system"
+                @AppStorage("mcSettingsAccentHex") var accentHex: String = AppearanceDefaults.accentHex
+            }
+            """,
+            expandedSource: """
+            struct AppearanceProvider {
+                @AppStorage("mcSettingsTheme") var themeRawValue: String = "system"
+                @AppStorage("mcSettingsAccentHex") var accentHex: String = AppearanceDefaults.accentHex
+
+                struct Mock {
+                    var themeRawValue: String
+
+                    var accentHex: String
+
+                    init(themeRawValue: String = "system", accentHex: String = AppearanceDefaults.accentHex) {
+                        self.themeRawValue = themeRawValue
+                        self.accentHex = accentHex
+                    }
+                }
+            }
+            """,
+            macros: testMacros
+        )
+        #else
+        throw XCTSkip("macros are only supported when running tests for the host platform")
+        #endif
+    }
+
+    // MARK: - Isolation
+
+    /// Tipo aninhado não herda isolação de global actor, então um provider `@MainActor` deixaria
+    /// o Mock nonisolated — e ele não conseguiria ler os serviços `@MainActor` que o provider lê.
+    func testMainActorProviderProducesMainActorMock() throws {
+        #if canImport(MCMacrosPlugin)
+        assertMacroExpansion(
+            """
+            @MainActor
+            @Mockable
+            struct SyncProvider {
+                @State var isBusy: Bool = false
+            }
+            """,
+            expandedSource: """
+            @MainActor
+            struct SyncProvider {
+                @State var isBusy: Bool = false
+
+                @MainActor
+                struct Mock {
+                    var isBusy: Bool
+
+                    init(isBusy: Bool = false) {
+                        self.isBusy = isBusy
+                    }
+                }
+            }
+            """,
+            macros: testMacros
+        )
+        #else
+        throw XCTSkip("macros are only supported when running tests for the host platform")
+        #endif
+    }
+
     // MARK: - @Query properties
 
     func testQueryPropertiesAreRequiredInInit() throws {

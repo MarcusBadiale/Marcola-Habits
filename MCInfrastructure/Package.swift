@@ -9,6 +9,7 @@ let package = Package(
         .library(name: "MCPersistence", targets: ["MCPersistence"]),
         .library(name: "MCSyncAPI", targets: ["MCSyncAPI"]),
         .library(name: "MCSync", targets: ["MCSync"]),
+        .library(name: "MCAuthAPI", targets: ["MCAuthAPI"]),
         .library(name: "MCNetworking", targets: ["MCNetworking"]),
     ],
     dependencies: [
@@ -28,6 +29,11 @@ let package = Package(
             name: "MCSync",
             dependencies: ["MCSyncAPI"]
         ),
+        .target(name: "MCAuthAPI"),
         .target(name: "MCNetworking"),
+        .testTarget(
+            name: "MCInfrastructureTests",
+            dependencies: ["MCSync"]
+        ),
     ]
 )

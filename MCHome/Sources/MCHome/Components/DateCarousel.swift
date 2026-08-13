@@ -60,12 +60,12 @@ private struct DateItem: View {
         }
         .frame(width: 48, height: 56)
         .background(
-            isSelected ? MCColors.accent : Color.clear,
+            isSelected ? Color.accentColor : Color.clear,
             in: RoundedRectangle(cornerRadius: MCSpacing.cardCornerRadius)
         )
         .overlay(
             RoundedRectangle(cornerRadius: MCSpacing.cardCornerRadius)
-                .strokeBorder(date.isToday && !isSelected ? MCColors.accent : .clear, lineWidth: 1.5)
+                .strokeBorder(date.isToday && !isSelected ? Color.accentColor : .clear, lineWidth: 1.5)
         )
         .animation(.easeInOut(duration: 0.2), value: isSelected)
     }

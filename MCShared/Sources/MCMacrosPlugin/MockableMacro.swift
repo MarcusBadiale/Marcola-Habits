@@ -13,6 +13,15 @@ public struct MockableMacro: MemberMacro {
             throw MockableError.message("@Mockable can only be applied to a struct")
         }
 
+        // Tipo aninhado NÃO herda isolação de global actor do tipo que o contém, então um
+        // `@MainActor` no provider deixaria o Mock nonisolated — e ele não conseguiria ler os
+        // serviços @MainActor que o provider lê. Propagar explicitamente.
+        let isMainActorIsolated = declaration.attributes.contains { attribute in
+            attribute.as(AttributeSyntax.self)?
+                .attributeName.as(IdentifierTypeSyntax.self)?
+                .name.trimmedDescription == "MainActor"
+        }
+
         var properties: [MockProperty] = []
         var functions: [MockFunction] = []
 
@@ -37,13 +46,18 @@ public struct MockableMacro: MemberMacro {
             }
         }
 
-        let mock = generateMock(properties: properties, functions: functions)
+        let mock = generateMock(
+            properties: properties,
+            functions: functions,
+            isMainActorIsolated: isMainActorIsolated
+        )
         return [mock]
     }
 
     private static func generateMock(
         properties: [MockProperty],
-        functions: [MockFunction]
+        functions: [MockFunction],
+        isMainActorIsolated: Bool
     ) -> DeclSyntax {
         var members: [String] = []
         var requiredParams: [String] = []
@@ -99,9 +113,10 @@ public struct MockableMacro: MemberMacro {
         }
 
         let body = members.joined(separator: "\n\n")
+        let isolation = isMainActorIsolated ? "@MainActor\n" : ""
 
         return """
-        struct Mock {
+        \(raw: isolation)struct Mock {
         \(raw: body)
         }
         """

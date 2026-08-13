@@ -109,7 +109,7 @@ struct ActivityCalendarGrid: View {
                     .foregroundStyle(.secondary)
                 ActivityCalendarGrid(
                     days: PreviewActivity.days(count: days),
-                    tint: MCColors.accent,
+                    tint: Color.accentColor,
                     identifierPrefix: "preview-calendar-\(days)"
                 )
             }

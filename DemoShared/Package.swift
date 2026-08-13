@@ -21,6 +21,7 @@ let package = Package(
                 .product(name: "MCDomain", package: "MCDomain"),
                 .product(name: "MCShared", package: "MCShared"),
                 .product(name: "MCSyncAPI", package: "MCInfrastructure"),
+                .product(name: "MCAuthAPI", package: "MCInfrastructure"),
             ]
         ),
     ],
