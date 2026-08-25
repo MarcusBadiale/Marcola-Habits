@@ -46,17 +46,10 @@ struct AppearanceProviderTests {
 
     @Test
     func isSelectedEhCaseInsensitive() {
-        // `var` porque o @Mockable marca toda função do Mock como `mutating`, mute ela ou não.
-        // E o resultado é ligado antes do #expect porque o macro do Swift Testing decompõe a
-        // chamada num closure que captura o receptor como imutável — chamada `mutating` dentro
-        // de #expect não compila.
-        var sut = AppearanceProvider.Mock(accentHex: "#3b82f6")
+        let sut = AppearanceProvider.Mock(accentHex: "#3b82f6")
 
-        let selecionaMesmoHexEmCaixaAlta = sut.isSelected("#3B82F6")
-        let selecionaOutroHex = sut.isSelected("#EF4444")
-
-        #expect(selecionaMesmoHexEmCaixaAlta)
-        #expect(selecionaOutroHex == false)
+        #expect(sut.isSelected("#3B82F6"))
+        #expect(sut.isSelected("#EF4444") == false)
     }
 
     @Test

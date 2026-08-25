@@ -14,7 +14,7 @@ struct HomeProviderStreakTests {
         let habit = TestHelpers.makeHabit()
         let spy = SpyStatsCalculator()
         spy.stubbedCurrentStreak = 12
-        var sut = try makeSUT(habits: [habit], allLogs: [TestHelpers.makeLog(habit: habit)], stats: spy)
+        let sut = try makeSUT(habits: [habit], allLogs: [TestHelpers.makeLog(habit: habit)], stats: spy)
 
         #expect(sut.streak(habit) == 12)
         #expect(spy.currentStreakCalls.count == 1)
@@ -32,7 +32,7 @@ struct HomeProviderStreakTests {
             TestHelpers.makeLog(habit: other, daysAgo: 0),
             TestHelpers.makeLog(habit: habit, daysAgo: 1),
         ]
-        var sut = try makeSUT(habits: [habit, other], allLogs: logs, stats: spy)
+        let sut = try makeSUT(habits: [habit, other], allLogs: logs, stats: spy)
 
         _ = sut.streak(habit)
 
@@ -47,7 +47,7 @@ struct HomeProviderStreakTests {
         let habit = TestHelpers.makeHabit()
         // Três dias seguidos completados até ontem, sem check-in hoje.
         let logs = (1...3).map { TestHelpers.makeLog(habit: habit, daysAgo: $0, completed: true) }
-        var sut = try makeSUT(habits: [habit], allLogs: logs, stats: StatsCalculator())
+        let sut = try makeSUT(habits: [habit], allLogs: logs, stats: StatsCalculator())
 
         #expect(sut.streak(habit) == 3)
     }
@@ -56,7 +56,7 @@ struct HomeProviderStreakTests {
     @MainActor
     func streakZeroWithoutLogs() throws {
         let habit = TestHelpers.makeHabit()
-        var sut = try makeSUT(habits: [habit], stats: StatsCalculator())
+        let sut = try makeSUT(habits: [habit], stats: StatsCalculator())
         #expect(sut.streak(habit) == 0)
     }
 

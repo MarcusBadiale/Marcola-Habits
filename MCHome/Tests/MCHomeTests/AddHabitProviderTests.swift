@@ -110,7 +110,7 @@ struct AddHabitProviderTests {
     func saveInsertsHabitAndDismisses() throws {
         let context = try TestHelpers.makeContext()
         let spy = SpyNavigator()
-        var sut = AddHabitProvider.Mock(
+        let sut = AddHabitProvider.Mock(
             categories: [], templates: [],
             modelContext: context, navigator: spy,
             name: "New habit"
@@ -128,7 +128,7 @@ struct AddHabitProviderTests {
     func cancelDismisses() throws {
         let context = try TestHelpers.makeContext()
         let spy = SpyNavigator()
-        var sut = AddHabitProvider.Mock(
+        let sut = AddHabitProvider.Mock(
             categories: [], templates: [],
             modelContext: context, navigator: spy
         )

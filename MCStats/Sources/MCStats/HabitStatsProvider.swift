@@ -41,8 +41,7 @@ struct HabitStatsProvider: MCProvider {
         )
     }
 
-    /// Computed property e não função — o `@Mockable` marca toda função do `Mock` como `mutating`,
-    /// e `summary` não poderia chamá-la.
+    /// Logs deste hábito, já em DTO.
     private var logDTOs: [HabitLogDTO] {
         allLogs.compactMap { log in
             guard log.habit?.id == habitID else { return nil }

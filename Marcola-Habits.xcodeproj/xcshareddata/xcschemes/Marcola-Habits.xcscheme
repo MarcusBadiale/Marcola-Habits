@@ -37,30 +37,6 @@
             default = "YES">
          </TestPlanReference>
       </TestPlans>
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AB0BBC822F91DBA80042B59E"
-               BuildableName = "Marcola-HabitsTests.xctest"
-               BlueprintName = "Marcola-HabitsTests"
-               ReferencedContainer = "container:Marcola-Habits.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AB0BBC8C2F91DBA80042B59E"
-               BuildableName = "Marcola-HabitsUITests.xctest"
-               BlueprintName = "Marcola-HabitsUITests"
-               ReferencedContainer = "container:Marcola-Habits.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"

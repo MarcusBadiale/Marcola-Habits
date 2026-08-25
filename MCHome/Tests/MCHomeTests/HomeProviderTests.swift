@@ -18,7 +18,7 @@ struct HomeProviderTests {
             frequency: .daily, targetCount: 1, targetUnit: "",
             routine: .anytime
         )
-        var sut = HomeProvider.Mock(
+        let sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [],
             modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator(),
             selectedDate: Date.now.startOfDay
@@ -40,7 +40,7 @@ struct HomeProviderTests {
             frequency: .daily, targetCount: 1, targetUnit: "",
             routine: .evening
         )
-        var sut = HomeProvider.Mock(
+        let sut = HomeProvider.Mock(
             habits: [habit1, habit2], categories: [category], allLogs: [],
             modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator(),
             selectedCategoryID: category.id
@@ -59,7 +59,7 @@ struct HomeProviderTests {
             frequency: .daily, targetCount: 1, targetUnit: "",
             routine: .anytime
         )
-        var sut = HomeProvider.Mock(
+        let sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [],
             modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator()
         )
@@ -77,7 +77,7 @@ struct HomeProviderTests {
         let log = HabitLogModel(
             date: Date.now.startOfDay, completed: true, count: 1, habit: habit
         )
-        var sut = HomeProvider.Mock(
+        let sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [log],
             modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator()
         )
@@ -95,7 +95,7 @@ struct HomeProviderTests {
         let partialLog = HabitLogModel(
             date: Date.now.startOfDay, completed: false, count: 3, habit: habit
         )
-        var sut = HomeProvider.Mock(
+        let sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [partialLog],
             modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator()
         )
@@ -112,7 +112,7 @@ struct HomeProviderTests {
             frequency: .daily, targetCount: 8, targetUnit: "cups",
             routine: .anytime
         )
-        var sut = HomeProvider.Mock(
+        let sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [],
             modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator()
         )
@@ -130,7 +130,7 @@ struct HomeProviderTests {
         let log = HabitLogModel(
             date: Date.now.startOfDay, completed: false, count: 4, habit: habit
         )
-        var sut = HomeProvider.Mock(
+        let sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [log],
             modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator()
         )
@@ -148,7 +148,7 @@ struct HomeProviderTests {
         let log = HabitLogModel(
             date: Date.now.startOfDay, completed: true, count: 10, habit: habit
         )
-        var sut = HomeProvider.Mock(
+        let sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [log],
             modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator()
         )
@@ -166,7 +166,7 @@ struct HomeProviderTests {
             frequency: .daily, targetCount: 1, targetUnit: "",
             routine: .anytime
         )
-        var sut = HomeProvider.Mock(
+        let sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [],
             modelContext: context, navigator: spy, stats: StatsCalculator()
         )
@@ -180,7 +180,7 @@ struct HomeProviderTests {
     func showAddHabitPresentsCorrectRoute() throws {
         let context = try TestHelpers.makeContext()
         let spy = SpyNavigator()
-        var sut = HomeProvider.Mock(
+        let sut = HomeProvider.Mock(
             habits: [], categories: [], allLogs: [],
             modelContext: context, navigator: spy, stats: StatsCalculator()
         )
@@ -201,7 +201,7 @@ struct HomeProviderTests {
             routine: .anytime
         )
         context.insert(habit)
-        var sut = HomeProvider.Mock(
+        let sut = HomeProvider.Mock(
             habits: [habit], categories: [], allLogs: [],
             modelContext: context, navigator: SpyNavigator(), stats: StatsCalculator()
         )

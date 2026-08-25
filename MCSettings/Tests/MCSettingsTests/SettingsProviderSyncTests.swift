@@ -20,7 +20,7 @@ struct SettingsProviderSyncTests {
     @Test @MainActor
     func syncNowDelegaProServico() {
         let spy = SpySyncService()
-        var sut = makeSUT(sync: spy)
+        let sut = makeSUT(sync: spy)
 
         sut.syncNow()
 
@@ -32,7 +32,7 @@ struct SettingsProviderSyncTests {
     @Test @MainActor
     func syncNowRepassaTodaChamada() {
         let spy = SpySyncService()
-        var sut = makeSUT(sync: spy)
+        let sut = makeSUT(sync: spy)
 
         sut.syncNow()
         sut.syncNow()

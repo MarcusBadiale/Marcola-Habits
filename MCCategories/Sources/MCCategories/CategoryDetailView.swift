@@ -50,7 +50,9 @@ struct CategoryDetailView: View {
                                 Image(systemName: provider.isCompleted(habit) ? "checkmark.circle.fill" : "circle")
                                     .foregroundStyle(provider.isCompleted(habit) ? Color(hex: habit.colorHex) : .secondary)
                             }
+                            .contentShape(Rectangle())
                             .onTapGesture { provider.goToHabitDetail(habit) }
+                            .accessibilityElement(children: .combine)
                             .accessibilityIdentifier("category-detail-habit-\(index)")
                         }
                     }

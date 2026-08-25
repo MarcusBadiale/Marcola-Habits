@@ -39,7 +39,7 @@ struct AppearanceView: View {
         SettingsSection(header: "App color", identifier: "settings-appearance-accent") {
             AccentColorGrid(
                 hexes: provider.palette,
-                selectedHex: provider.accentHex,
+                isSelected: { provider.isSelected($0) },
                 onSelect: { provider.selectAccent($0) }
             )
             .padding(MCSpacing.lg)

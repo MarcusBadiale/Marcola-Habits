@@ -162,7 +162,7 @@ struct HabitDetailProviderTests {
         let habit = TestHelpers.makeHabit()
         let previousUpdatedAt = habit.updatedAt
         let spy = SpyNavigator()
-        var sut = try makeSUT(habitID: habit.id, allHabits: [habit], navigator: spy)
+        let sut = try makeSUT(habitID: habit.id, allHabits: [habit], navigator: spy)
 
         sut.archiveHabit()
 
@@ -175,7 +175,7 @@ struct HabitDetailProviderTests {
     @MainActor
     func archiveHabitNoOpWhenHabitMissing() throws {
         let spy = SpyNavigator()
-        var sut = try makeSUT(habitID: UUID(), allHabits: [], navigator: spy)
+        let sut = try makeSUT(habitID: UUID(), allHabits: [], navigator: spy)
 
         sut.archiveHabit()
 

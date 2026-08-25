@@ -29,6 +29,19 @@ final class HomeFlowTests: XCTestCase {
             .assertHabitCardExists(at: 0)
     }
 
+    // MARK: - Check-in
+
+    /// O card 0 é sempre "Beber água" — é `.daily`, e a lista vem ordenada por nome. Assert em
+    /// índice ≥ 1 seria instável: "Exercício" é `specificDays(seg–sex)` e some no fim de semana.
+    @MainActor
+    func testToggleHabitMarksCompletion() {
+        HomePage(app: app)
+            .assertVisible()
+            .assertHabitToggleValue(at: 0, equals: "not completed")
+            .toggleHabit(at: 0)
+            .assertHabitToggleValue(at: 0, equals: "completed")
+    }
+
     // MARK: - Habit detail
 
     @MainActor
