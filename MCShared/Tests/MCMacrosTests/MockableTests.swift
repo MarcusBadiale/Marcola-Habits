@@ -312,7 +312,7 @@ final class MockableTests: XCTestCase {
 
     // MARK: - Functions become mutating
 
-    func testFunctionsBecomeMutating() throws {
+    func testMutatingFunctionsAreMarkedMutating() throws {
         #if canImport(MCMacrosPlugin)
         assertMacroExpansion(
             """
@@ -460,7 +460,7 @@ final class MockableTests: XCTestCase {
                         count += 1
                     }
 
-                    mutating func sideEffect() {
+                    func sideEffect() {
                         modelContext.insert(count)
                     }
 

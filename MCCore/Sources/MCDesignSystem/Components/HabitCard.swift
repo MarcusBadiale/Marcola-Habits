@@ -7,6 +7,10 @@ public struct HabitCard: View {
     public let isCompleted: Bool
     public let streak: Int
     public let progress: Double
+    /// Identifier do botão de check-in. O card em si é identificado por quem o usa; este param
+    /// existe porque o botão é filho e precisa ser endereçável por conta própria — mesmo desenho do
+    /// `identifierPrefix` do `StatsHabitRow`.
+    public let toggleIdentifier: String?
     public let onToggle: () -> Void
 
     public init(
@@ -16,6 +20,7 @@ public struct HabitCard: View {
         isCompleted: Bool,
         streak: Int = 0,
         progress: Double = 0,
+        toggleIdentifier: String? = nil,
         onToggle: @escaping () -> Void
     ) {
         self.name = name
@@ -24,6 +29,7 @@ public struct HabitCard: View {
         self.isCompleted = isCompleted
         self.streak = streak
         self.progress = progress
+        self.toggleIdentifier = toggleIdentifier
         self.onToggle = onToggle
     }
 
@@ -61,6 +67,9 @@ public struct HabitCard: View {
                     .contentTransition(.symbolEffect(.replace))
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(name)
+            .accessibilityValue(isCompleted ? "completed" : "not completed")
+            .accessibilityIdentifier(toggleIdentifier ?? "")
         }
         .padding(MCSpacing.cardPadding)
         .background(MCColors.cardBackground, in: RoundedRectangle(cornerRadius: MCSpacing.cardCornerRadius))

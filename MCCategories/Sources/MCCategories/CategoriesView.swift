@@ -21,7 +21,11 @@ struct CategoriesView: View {
                     bottom: MCSpacing.xs,
                     trailing: MCSpacing.md
                 ))
+                .contentShape(Rectangle())
                 .onTapGesture { provider.goToDetail(category) }
+                // A row não é `Button`, então sem o `.combine` ela vira ícone + nome + contagem +
+                // chevron soltos e o identifier não resolve pra nenhum deles (iOS 26).
+                .accessibilityElement(children: .combine)
                 .accessibilityIdentifier("categories-row-\(index)")
             }
             .onDelete { indexSet in

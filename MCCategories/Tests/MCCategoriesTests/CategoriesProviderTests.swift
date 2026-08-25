@@ -30,7 +30,7 @@ struct CategoriesProviderTests {
         context.insert(active)
         context.insert(archived)
 
-        var sut = CategoriesProvider.Mock(
+        let sut = CategoriesProvider.Mock(
             categories: [category],
             modelContext: context, navigator: SpyNavigator()
         )
@@ -44,7 +44,7 @@ struct CategoriesProviderTests {
         let context = try TestHelpers.makeContext()
         let spy = SpyNavigator()
         let category = CategoryModel(name: "Health", icon: "heart", colorHex: "#F00", sortOrder: 0)
-        var sut = CategoriesProvider.Mock(
+        let sut = CategoriesProvider.Mock(
             categories: [category],
             modelContext: context, navigator: spy
         )
@@ -58,7 +58,7 @@ struct CategoriesProviderTests {
     func showAddCategoryPresentsCorrectRoute() throws {
         let context = try TestHelpers.makeContext()
         let spy = SpyNavigator()
-        var sut = CategoriesProvider.Mock(
+        let sut = CategoriesProvider.Mock(
             categories: [],
             modelContext: context, navigator: spy
         )
@@ -77,7 +77,7 @@ struct CategoriesProviderTests {
         context.insert(category)
         try context.save()
 
-        var sut = CategoriesProvider.Mock(
+        let sut = CategoriesProvider.Mock(
             categories: [category],
             modelContext: context, navigator: SpyNavigator()
         )

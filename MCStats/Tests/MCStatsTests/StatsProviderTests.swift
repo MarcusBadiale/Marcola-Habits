@@ -53,8 +53,7 @@ struct StatsProviderTests {
     func goToHabitStatsPushesRoute() {
         let habit = TestHelpers.makeHabit()
         let spy = SpyNavigator()
-        // `var` porque o `@Mockable` marca toda função do Mock como `mutating`.
-        var sut = makeSUT(allHabits: [habit], navigator: spy)
+        let sut = makeSUT(allHabits: [habit], navigator: spy)
 
         sut.goToHabitStats(habit)
 

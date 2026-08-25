@@ -64,7 +64,7 @@ struct ArchivedHabitsProviderTests {
             TestHelpers.makeLog(habit: habit, daysAgo: 1),
         ]
 
-        var sut = try makeSUT(habits: [habit])
+        let sut = try makeSUT(habits: [habit])
 
         #expect(sut.logCount(for: habit) == 2)
     }
@@ -77,7 +77,7 @@ struct ArchivedHabitsProviderTests {
         habit.updatedAt = Calendar.current.date(byAdding: .day, value: -5, to: .now)!
         let antes = habit.updatedAt
 
-        var sut = try makeSUT(habits: [habit])
+        let sut = try makeSUT(habits: [habit])
         sut.unarchive(habit)
 
         #expect(habit.isArchived == false)

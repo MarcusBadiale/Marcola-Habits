@@ -21,13 +21,6 @@ struct MockProperty {
     let originalSource: String
 }
 
-// MARK: - Classified Function
-
-struct MockFunction {
-    let name: String
-    let originalSource: String
-}
-
 // MARK: - Classifier
 
 enum MockClassifier {
@@ -125,12 +118,8 @@ enum MockClassifier {
         }
     }
 
-    static func classifyFunction(member: MemberBlockItemSyntax) -> MockFunction? {
-        guard let funcDecl = member.decl.as(FunctionDeclSyntax.self) else { return nil }
-        return MockFunction(
-            name: funcDecl.name.trimmedDescription,
-            originalSource: funcDecl.trimmedDescription
-        )
+    static func classifyFunction(member: MemberBlockItemSyntax) -> FunctionDeclSyntax? {
+        member.decl.as(FunctionDeclSyntax.self)
     }
 
     /// Checks if a function body references any of the excluded property names.

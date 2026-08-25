@@ -71,9 +71,6 @@ struct StatsProvider: MCProvider {
     // MARK: - Privados
 
     /// Logs dos hábitos ativos, já em DTO. Log de hábito arquivado ou órfão fica de fora.
-    ///
-    /// É computed property e não função de propósito: o `@Mockable` marca *toda* função do `Mock`
-    /// como `mutating`, e uma computed property (`summary`) não pode chamar membro `mutating`.
     private var activeLogDTOs: [HabitLogDTO] {
         let ids = Set(allHabits.filter { !$0.isArchived }.map(\.id))
         return allLogs.compactMap { log in

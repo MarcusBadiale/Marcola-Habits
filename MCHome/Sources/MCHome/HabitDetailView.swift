@@ -85,6 +85,7 @@ struct HabitDetailView: View {
                     .accessibilityIdentifier("habit-detail-archive-button")
                 }
             }
+            .accessibilityIdentifier("habit-detail-list")
             .navigationTitle(habit.name)
         } else {
             ContentUnavailableView(

@@ -20,6 +20,9 @@ struct HomeView: View {
                         isSelected: provider.selectedCategoryID == nil
                     )
                     .onTapGesture { provider.selectedCategoryID = nil }
+                    // Sem o `.combine` o chip vira ícone + texto soltos e o identifier não resolve
+                    // pra elemento nenhum (iOS 26).
+                    .accessibilityElement(children: .combine)
                     .accessibilityIdentifier("home-category-all")
 
                     ForEach(Array(provider.categories.enumerated()), id: \.element.id) { index, category in
@@ -30,6 +33,7 @@ struct HomeView: View {
                             isSelected: provider.selectedCategoryID == category.id
                         )
                         .onTapGesture { provider.selectedCategoryID = category.id }
+                        .accessibilityElement(children: .combine)
                         .accessibilityIdentifier("home-category-chip-\(index)")
                     }
                 }
@@ -46,6 +50,7 @@ struct HomeView: View {
                         isCompleted: provider.isCompleted(habit),
                         streak: provider.streak(habit),
                         progress: provider.progress(habit),
+                        toggleIdentifier: "home-habit-toggle-\(index)",
                         onToggle: { provider.toggleCompletion(habit) }
                     )
                     .listRowSeparator(.hidden)
@@ -55,7 +60,11 @@ struct HomeView: View {
                         bottom: MCSpacing.xs,
                         trailing: MCSpacing.md
                     ))
+                    .contentShape(Rectangle())
                     .onTapGesture { provider.goToDetail(habit) }
+                    // `.contain` e não `.combine`: o card tem o botão de check-in dentro, e o
+                    // `.combine` o achataria pra fora da árvore de acessibilidade.
+                    .accessibilityElement(children: .contain)
                     .accessibilityIdentifier("home-habit-card-\(index)")
                 }
             }

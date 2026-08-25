@@ -12,13 +12,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		ABF701492F9ABA190089263D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = ABF701332F9ABA170089263D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = ABF7013A2F9ABA170089263D;
-			remoteInfo = SettingsDemoApp;
-		};
 		ABF701532F9ABA190089263D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ABF701332F9ABA170089263D /* Project object */;
@@ -30,7 +23,6 @@
 
 /* Begin PBXFileReference section */
 		ABF7013B2F9ABA170089263D /* SettingsDemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SettingsDemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		ABF701482F9ABA190089263D /* SettingsDemoAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SettingsDemoAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABF701522F9ABA190089263D /* SettingsDemoAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SettingsDemoAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -57,13 +49,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ABF701452F9ABA190089263D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		ABF7014F2F9ABA190089263D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -87,7 +72,6 @@
 			isa = PBXGroup;
 			children = (
 				ABF7013B2F9ABA170089263D /* SettingsDemoApp.app */,
-				ABF701482F9ABA190089263D /* SettingsDemoAppTests.xctest */,
 				ABF701522F9ABA190089263D /* SettingsDemoAppUITests.xctest */,
 			);
 			name = Products;
@@ -119,26 +103,6 @@
 			productName = SettingsDemoApp;
 			productReference = ABF7013B2F9ABA170089263D /* SettingsDemoApp.app */;
 			productType = "com.apple.product-type.application";
-		};
-		ABF701472F9ABA190089263D /* SettingsDemoAppTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = ABF7015F2F9ABA190089263D /* Build configuration list for PBXNativeTarget "SettingsDemoAppTests" */;
-			buildPhases = (
-				ABF701442F9ABA190089263D /* Sources */,
-				ABF701452F9ABA190089263D /* Frameworks */,
-				ABF701462F9ABA190089263D /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				ABF7014A2F9ABA190089263D /* PBXTargetDependency */,
-			);
-			name = SettingsDemoAppTests;
-			packageProductDependencies = (
-			);
-			productName = SettingsDemoAppTests;
-			productReference = ABF701482F9ABA190089263D /* SettingsDemoAppTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		ABF701512F9ABA190089263D /* SettingsDemoAppUITests */ = {
 			isa = PBXNativeTarget;
@@ -176,10 +140,6 @@
 					ABF7013A2F9ABA170089263D = {
 						CreatedOnToolsVersion = 26.2;
 					};
-					ABF701472F9ABA190089263D = {
-						CreatedOnToolsVersion = 26.2;
-						TestTargetID = ABF7013A2F9ABA170089263D;
-					};
 					ABF701512F9ABA190089263D = {
 						CreatedOnToolsVersion = 26.2;
 						TestTargetID = ABF7013A2F9ABA170089263D;
@@ -205,7 +165,6 @@
 			projectRoot = "";
 			targets = (
 				ABF7013A2F9ABA170089263D /* SettingsDemoApp */,
-				ABF701472F9ABA190089263D /* SettingsDemoAppTests */,
 				ABF701512F9ABA190089263D /* SettingsDemoAppUITests */,
 			);
 		};
@@ -213,13 +172,6 @@
 
 /* Begin PBXResourcesBuildPhase section */
 		ABF701392F9ABA170089263D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		ABF701462F9ABA190089263D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -243,13 +195,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ABF701442F9ABA190089263D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		ABF7014E2F9ABA190089263D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -260,11 +205,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		ABF7014A2F9ABA190089263D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = ABF7013A2F9ABA170089263D /* SettingsDemoApp */;
-			targetProxy = ABF701492F9ABA190089263D /* PBXContainerItemProxy */;
-		};
 		ABF701542F9ABA190089263D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = ABF7013A2F9ABA170089263D /* SettingsDemoApp */;
@@ -477,58 +417,6 @@
 			};
 			name = Release;
 		};
-		ABF701602F9ABA190089263D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SJTT4SW9L7;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				MACOSX_DEPLOYMENT_TARGET = 15.7;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.marcola.SettingsDemoAppTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SettingsDemoApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SettingsDemoApp";
-				XROS_DEPLOYMENT_TARGET = 26.2;
-			};
-			name = Debug;
-		};
-		ABF701612F9ABA190089263D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SJTT4SW9L7;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				MACOSX_DEPLOYMENT_TARGET = 15.7;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.marcola.SettingsDemoAppTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SettingsDemoApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SettingsDemoApp";
-				XROS_DEPLOYMENT_TARGET = 26.2;
-			};
-			name = Release;
-		};
 		ABF701632F9ABA190089263D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -596,15 +484,6 @@
 			buildConfigurations = (
 				ABF7015D2F9ABA190089263D /* Debug */,
 				ABF7015E2F9ABA190089263D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		ABF7015F2F9ABA190089263D /* Build configuration list for PBXNativeTarget "SettingsDemoAppTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				ABF701602F9ABA190089263D /* Debug */,
-				ABF701612F9ABA190089263D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

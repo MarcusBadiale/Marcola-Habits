@@ -71,7 +71,7 @@ struct SettingsProviderTests {
     @Test @MainActor
     func navegaProAppearance() {
         let spy = SpyNavigator()
-        var sut = makeSUT(navigator: spy)
+        let sut = makeSUT(navigator: spy)
 
         sut.goToAppearance()
 
@@ -82,7 +82,7 @@ struct SettingsProviderTests {
     @Test @MainActor
     func navegaProExport() {
         let spy = SpyNavigator()
-        var sut = makeSUT(navigator: spy)
+        let sut = makeSUT(navigator: spy)
 
         sut.goToExport()
 
@@ -92,7 +92,7 @@ struct SettingsProviderTests {
     @Test @MainActor
     func navegaProArquivados() {
         let spy = SpyNavigator()
-        var sut = makeSUT(navigator: spy)
+        let sut = makeSUT(navigator: spy)
 
         sut.goToArchived()
 
@@ -104,7 +104,7 @@ struct SettingsProviderTests {
     @Test @MainActor
     func naoNavegaProContaNemNotificacoes() {
         let spy = SpyNavigator()
-        var sut = makeSUT(navigator: spy)
+        let sut = makeSUT(navigator: spy)
 
         sut.goToAppearance()
         sut.goToExport()

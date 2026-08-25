@@ -12,7 +12,7 @@ struct EditCategoryProviderTests {
     @Test @MainActor
     func canSaveIsFalseWhenNameEmpty() throws {
         let context = try TestHelpers.makeContext()
-        var sut = EditCategoryProvider.Mock(
+        let sut = EditCategoryProvider.Mock(
             editingCategoryID: nil, allCategories: [],
             modelContext: context, navigator: SpyNavigator()
         )
@@ -35,7 +35,7 @@ struct EditCategoryProviderTests {
     @Test @MainActor
     func isEditingReturnsFalseWhenNoID() throws {
         let context = try TestHelpers.makeContext()
-        var sut = EditCategoryProvider.Mock(
+        let sut = EditCategoryProvider.Mock(
             editingCategoryID: nil, allCategories: [],
             modelContext: context, navigator: SpyNavigator()
         )
@@ -45,7 +45,7 @@ struct EditCategoryProviderTests {
     @Test @MainActor
     func isEditingReturnsTrueWhenIDPresent() throws {
         let context = try TestHelpers.makeContext()
-        var sut = EditCategoryProvider.Mock(
+        let sut = EditCategoryProvider.Mock(
             editingCategoryID: UUID(), allCategories: [],
             modelContext: context, navigator: SpyNavigator()
         )
@@ -90,7 +90,7 @@ struct EditCategoryProviderTests {
     func saveCreatesNewCategoryAndDismisses() throws {
         let context = try TestHelpers.makeContext()
         let spy = SpyNavigator()
-        var sut = EditCategoryProvider.Mock(
+        let sut = EditCategoryProvider.Mock(
             editingCategoryID: nil, allCategories: [],
             modelContext: context, navigator: spy,
             name: "New Category", icon: "star.fill", colorHex: "#3B82F6"
@@ -108,7 +108,7 @@ struct EditCategoryProviderTests {
     func saveSetsCorrectSortOrder() throws {
         let context = try TestHelpers.makeContext()
         let existing = CategoryModel(name: "First", icon: "1.circle", colorHex: "#000", sortOrder: 2)
-        var sut = EditCategoryProvider.Mock(
+        let sut = EditCategoryProvider.Mock(
             editingCategoryID: nil, allCategories: [existing],
             modelContext: context, navigator: SpyNavigator(),
             name: "Second"
@@ -128,7 +128,7 @@ struct EditCategoryProviderTests {
         let category = CategoryModel(name: "Old", icon: "folder", colorHex: "#000", sortOrder: 0)
         context.insert(category)
         let spy = SpyNavigator()
-        var sut = EditCategoryProvider.Mock(
+        let sut = EditCategoryProvider.Mock(
             editingCategoryID: category.id, allCategories: [category],
             modelContext: context, navigator: spy,
             name: "Updated", icon: "star.fill", colorHex: "#F00"
@@ -146,7 +146,7 @@ struct EditCategoryProviderTests {
     func cancelDismisses() throws {
         let context = try TestHelpers.makeContext()
         let spy = SpyNavigator()
-        var sut = EditCategoryProvider.Mock(
+        let sut = EditCategoryProvider.Mock(
             editingCategoryID: nil, allCategories: [],
             modelContext: context, navigator: spy
         )

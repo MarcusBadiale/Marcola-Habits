@@ -62,7 +62,7 @@ struct CategoryDetailProviderTests {
     func isCompletedFalseWithoutLog() throws {
         let category = TestHelpers.makeCategory()
         let habit = TestHelpers.makeHabit(category: category)
-        var sut = try makeSUT(categoryID: category.id, allCategories: [category])
+        let sut = try makeSUT(categoryID: category.id, allCategories: [category])
         #expect(sut.isCompleted(habit) == false)
     }
 
@@ -71,7 +71,7 @@ struct CategoryDetailProviderTests {
     func isCompletedTrueWithTodayLog() throws {
         let category = TestHelpers.makeCategory()
         let habit = TestHelpers.makeHabit(category: category)
-        var sut = try makeSUT(
+        let sut = try makeSUT(
             categoryID: category.id, allCategories: [category],
             allLogs: [TestHelpers.makeLog(habit: habit, completed: true)]
         )
@@ -83,7 +83,7 @@ struct CategoryDetailProviderTests {
     func isCompletedFalseWithPartialCount() throws {
         let category = TestHelpers.makeCategory()
         let habit = TestHelpers.makeHabit(name: "Water", targetCount: 8, targetUnit: "cups", category: category)
-        var sut = try makeSUT(
+        let sut = try makeSUT(
             categoryID: category.id, allCategories: [category],
             allLogs: [TestHelpers.makeLog(habit: habit, completed: false, count: 3)]
         )
@@ -95,7 +95,7 @@ struct CategoryDetailProviderTests {
     func isCompletedTrueWhenCountReachesTarget() throws {
         let category = TestHelpers.makeCategory()
         let habit = TestHelpers.makeHabit(name: "Water", targetCount: 8, targetUnit: "cups", category: category)
-        var sut = try makeSUT(
+        let sut = try makeSUT(
             categoryID: category.id, allCategories: [category],
             allLogs: [TestHelpers.makeLog(habit: habit, completed: false, count: 8)]
         )
@@ -107,7 +107,7 @@ struct CategoryDetailProviderTests {
     func isCompletedIgnoresYesterdayLog() throws {
         let category = TestHelpers.makeCategory()
         let habit = TestHelpers.makeHabit(category: category)
-        var sut = try makeSUT(
+        let sut = try makeSUT(
             categoryID: category.id, allCategories: [category],
             allLogs: [TestHelpers.makeLog(habit: habit, daysAgo: 1, completed: true)]
         )
@@ -122,7 +122,7 @@ struct CategoryDetailProviderTests {
         let category = TestHelpers.makeCategory()
         let habit = TestHelpers.makeHabit(category: category)
         let spy = SpyNavigator()
-        var sut = try makeSUT(categoryID: category.id, allCategories: [category], navigator: spy)
+        let sut = try makeSUT(categoryID: category.id, allCategories: [category], navigator: spy)
 
         sut.goToHabitDetail(habit)
 
@@ -136,7 +136,7 @@ struct CategoryDetailProviderTests {
     func showEditCategoryPresentsEditRoute() throws {
         let category = TestHelpers.makeCategory()
         let spy = SpyNavigator()
-        var sut = try makeSUT(categoryID: category.id, allCategories: [category], navigator: spy)
+        let sut = try makeSUT(categoryID: category.id, allCategories: [category], navigator: spy)
 
         sut.showEditCategory()
 

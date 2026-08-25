@@ -23,7 +23,7 @@ public struct MockableMacro: MemberMacro {
         }
 
         var properties: [MockProperty] = []
-        var functions: [MockFunction] = []
+        var functionDecls: [FunctionDeclSyntax] = []
 
         // Collect excluded @Environment property names
         let excludedNames: Set<String> = Set(
@@ -38,12 +38,35 @@ public struct MockableMacro: MemberMacro {
             if let prop = MockClassifier.classifyProperty(member: member) {
                 properties.append(prop)
             }
-            if let func_ = MockClassifier.classifyFunction(member: member) {
+            if let funcDecl = MockClassifier.classifyFunction(member: member) {
                 // Skip functions that reference excluded @Environment properties
                 if !MockClassifier.functionReferencesExcluded(member: member, excludedNames: excludedNames) {
-                    functions.append(func_)
+                    functionDecls.append(funcDecl)
                 }
             }
+        }
+
+        // Só escrita em propriedade ARMAZENADA exige `mutating`. `.computed` fica de fora de
+        // propósito: `HabitDetailProvider.archiveHabit` religa a computed `habit` num `guard let`
+        // e escreve nela — o alvo é o objeto, não o `self` do Mock.
+        let storedProperties: [String: TypeSyntax] = properties.reduce(into: [:]) { acc, prop in
+            switch prop.kind {
+            case .state, .query, .bindable, .regular: acc[prop.name] = prop.type
+            case .computed, .environment: break
+            }
+        }
+
+        let mutatingNames = MutationAnalyzer.mutatingFunctionNames(
+            functions: functionDecls,
+            storedProperties: storedProperties
+        )
+
+        let functions = functionDecls.map { decl in
+            MockFunction(
+                name: decl.name.trimmedDescription,
+                decl: decl,
+                mutatesState: mutatingNames.contains(decl.name.trimmedDescription)
+            )
         }
 
         let mock = generateMock(
@@ -99,7 +122,7 @@ public struct MockableMacro: MemberMacro {
 
         // Functions
         for func_ in functions {
-            members.append("    mutating \(func_.originalSource)")
+            members.append("    \(func_.emittedSource)")
         }
 
         // Init

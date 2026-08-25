@@ -5,10 +5,16 @@ struct CategoriesPage {
 
     // MARK: - Elements
 
+    /// Sem assumir o tipo do elemento: um container com `.combine` nem sempre aparece como
+    /// `otherElements`, e `firstMatch` resolve container + filho.
+    private func element(_ identifier: String) -> XCUIElement {
+        app.descendants(matching: .any).matching(identifier: identifier).firstMatch
+    }
+
     var addButton: XCUIElement { app.buttons["categories-add-button"] }
 
     func categoryRow(at index: Int) -> XCUIElement {
-        app.otherElements["categories-row-\(index)"]
+        element("categories-row-\(index)")
     }
 
     // MARK: - Actions

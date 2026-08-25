@@ -46,7 +46,7 @@ struct SettingsProviderAuthTests {
     @Test @MainActor
     func toggleEntraQuandoDeslogado() {
         let spy = SpyAuthService()
-        var sut = makeSUT(auth: spy)
+        let sut = makeSUT(auth: spy)
 
         sut.toggleAccount()
 
@@ -58,7 +58,7 @@ struct SettingsProviderAuthTests {
     func toggleSaiQuandoLogado() {
         let spy = SpyAuthService()
         spy.session = .signedIn(marcus)
-        var sut = makeSUT(auth: spy)
+        let sut = makeSUT(auth: spy)
 
         sut.toggleAccount()
 
